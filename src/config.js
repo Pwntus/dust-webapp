@@ -10,7 +10,7 @@ export const SENSORS = {
     name: 'REALF3'
   },
   '00001314': {
-    name: 'REALF4 A112'
+    name: 'REALF4 (A112)'
   }
 };
 

@@ -28,6 +28,6 @@ export default {
 <style lang="scss">
 #app {
   height: 100%;
-  padding: 20px;
+  padding: 20px 0 0 20px;
 }
 </style>

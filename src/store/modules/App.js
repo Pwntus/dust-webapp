@@ -20,6 +20,10 @@ const mutations = {
     try {
       let data = JSON.parse(message)
 
+      // Debug
+      //data.state.reported.pm25 = 155
+      //data.state.reported.pm10 = 85
+
       state.sensors[id] = {
         data: data.state.reported,
         config: SENSORS[id]
