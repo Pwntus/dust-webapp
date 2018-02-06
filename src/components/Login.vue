@@ -1,6 +1,12 @@
 <template lang="pug">
-.md-layout.md-alignment-center(v-if="false")
-  .md-layout-item.md-size-33.md-medium-size-33.md-small-size-50.md-xsmall-size-100
+.md-layout.md-alignment-center
+  md-progress-spinner.md-accent(
+    md-mode="indeterminate"
+    :md-diameter="100"
+    v-if="!auth"
+  )
+
+  .md-layout-item.md-size-33.md-medium-size-33.md-small-size-50.md-xsmall-size-100(v-if="false")
     md-card
       md-card-header
         md-card-header-text
@@ -41,6 +47,9 @@ export default {
   computed: {
     payload () {
       return { username: this.username, password: this.password, ctx: this }
+    },
+    auth () {
+      return this.$store.getters['App/auth']
     }
   },
   methods: {
@@ -65,5 +74,12 @@ export default {
 <style lang="scss" scoped>
 .md-layout {
   padding: 0 20px 20px 0;
+
+  .md-progress-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -50px 0 0 -50px;
+  }
 }
 </style>

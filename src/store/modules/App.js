@@ -58,24 +58,11 @@ const actions = {
   auth ({commit, dispatch}, {username, password, ctx}) {
     return MIC.login(username, password)
       .then(account => {
-        dispatch('getNames')
         commit(t.APP_SET_AUTH, 1)
+        dispatch('getNames')
         MQTT.init(ctx)
         return Promise.resolve(account)
       })
-  },
-  getNames ({commit}) {
-    MIC.invoke('ThingLambda', {
-      action: 'FIND',
-      query: {
-        size: 50,
-        query: { term: { thingType: '490' } }
-      }
-    })
-    .then(r => { return r.hits.hits })
-    .then(sensors => {
-      commit(t.APP_SET_NAMES, sensors)
-    })
   },
   message ({commit, dispatch}, {topic, message}) {
     commit(t.APP_SET_DATA, {topic, message})
@@ -89,6 +76,75 @@ const actions = {
     } catch (e) {
       return
     }
+  },
+  getNames ({commit, dispatch}) {
+    MIC.invoke('ThingLambda', {
+      action: 'FIND',
+      query: {
+        size: 50,
+        query: { term: { thingType: '490' } }
+      }
+    })
+    .then(r => { return r.hits.hits })
+    .then(sensors => {
+      commit(t.APP_SET_NAMES, sensors)
+      dispatch('getTimeseries')
+    })
+    .catch(e => {
+      console.log(e)
+    })
+  },
+  getTimeseries ({commit}) {
+    console.log('timeseries')
+    MIC.invoke('ObservationLambda', {
+      action: 'FIND',
+      query: {
+        size: 1,
+        aggs: {
+          hist: {
+            date_histogram: {
+              field: 'timestamp',
+              interval: '1h',
+              time_zone: '+01:00',
+              min_doc_count: 1,
+              extended_bounds: {
+                min: '2018-01-29T23:00:00.000Z',
+                max: '2018-02-06T12:33:53.881Z'
+              }
+            },
+            aggs: {
+              v10: { avg: { field: 'state.v10' } },
+              v25: { avg: { field: 'state.v25' } }
+            }
+          }
+        },
+        query: {
+          filtered: {
+            filter: {
+              bool: {
+                must: [
+                  { term: { thingName: '00001338' } },
+                  { range: { timestamp: {
+                    gte: '2018-01-29T23:00:00.000Z',
+                    lte: + new Date()
+                  } } }
+                ],
+                should: [
+                  { exists: { field: 'state.v10' } },
+                  { exists: { field: 'state.v25' } }
+                ]
+              }
+            }
+          }
+        }
+      }
+    })
+    .then(d => {
+      console.log(d)
+    })
+    .catch(e => {
+      console.log(e)
+    })
   }
 }
 
