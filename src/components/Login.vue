@@ -1,5 +1,5 @@
 <template lang="pug">
-.md-layout.md-alignment-center
+.md-layout.md-alignment-center(v-if="false")
   .md-layout-item.md-size-33.md-medium-size-33.md-small-size-50.md-xsmall-size-100
     md-card
       md-card-header
@@ -53,12 +53,17 @@ export default {
           this.loading = false
         })
     }
+  },
+  mounted () {
+    this.username = 'Dust'
+    this.password = 'Dust1234'
+    this.login()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .md-layout {
-
+  padding: 0 20px 20px 0;
 }
 </style>

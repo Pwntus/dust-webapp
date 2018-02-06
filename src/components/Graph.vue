@@ -4,8 +4,8 @@ md-card.graph
   md-card-header
     md-card-header-text
       .md-title
-        | {{ data.config.name }}
-        classifier(:data="data.data")
+        | {{ data.name }}
+        classifier(:data="data")
       .md-subhead {{ when }}
   md-card-content
     .md-layout
@@ -49,11 +49,11 @@ export default {
     reload () {
       this.$chart25.load({
         unload: true,
-        columns: [ ['data', this.data.data.pm25] ]
+        columns: [ ['data', this.data.pm25] ]
       })
       this.$chart10.load({
         unload: true,
-        columns: [ ['data', this.data.data.pm10] ]
+        columns: [ ['data', this.data.pm10] ]
       })
     }
   },
@@ -61,7 +61,7 @@ export default {
     this.$chart25 = c3.generate({
       bindto: this.$refs['pm25'],
       data: {
-        columns: [ ['data', this.data.data.pm25] ],
+        columns: [ ['data', this.data.pm25] ],
         type: 'gauge'
       },
       gauge: {
@@ -77,12 +77,13 @@ export default {
       color: {
         pattern: COLORS,
         threshold: { values: THRESHOLDS.pm25.hour} 
-      }
+      },
+      padding: { bottom: 2 }
     })
     this.$chart10 = c3.generate({
       bindto: this.$refs['pm10'],
       data: {
-        columns: [ ['data', this.data.data.pm10] ],
+        columns: [ ['data', this.data.pm10] ],
         type: 'gauge'
       },
       gauge: {
@@ -98,11 +99,12 @@ export default {
       color: {
         pattern: COLORS,
         threshold: { values: THRESHOLDS.pm10.hour }
-      }
+      },
+      padding: { bottom: 2 }
     })
 
     this.timeout = setInterval(() => {
-      this.when = moment(this.data.data.timestamp).fromNow()
+      this.when = moment(this.data.timestamp).fromNow()
     }, 1000)
   },
   beforeDestroy () {

@@ -1,19 +1,4 @@
-export const TOPIC = 'thing-update/StartIoT/#'
-export const SENSORS = {
-  '00001310': {
-    name: 'REALF'
-  },
-  '00001312': {
-    name: 'REALF2'
-  },
-  '00001313': {
-    name: 'REALF3'
-  },
-  '00001314': {
-    name: 'REALF4 (A112)'
-  }
-};
-
+export const TOPIC = 'thing-update/dust/#'
 export const COLORS = ['#6ee86e', '#ff9900', '#ff0000', '#990099']
 export const THRESHOLDS = {
   pm25: {
