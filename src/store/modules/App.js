@@ -4,27 +4,25 @@ import { MIC } from '@/lib/MIC'
 import { MQTT } from '@/lib/MQTT'
 import {
   TOPIC,
+  THING_TYPE,
   SENSORS
 } from '@/config'
 
 const state = {
   auth: false,
   sensors: {},
-  names: {}
+  names: {},
+  histograms: {},
+  queue: []
 }
 
 const mutations = {
   [t.APP_SET_AUTH] (state, value) {
     state.auth = value
   },
-  [t.APP_SET_DATA] (state, {topic, message}) {
+  [t.APP_SET_DATA] (state, {topic, data}) {
     try {
       const id = topic.slice(-8)
-      let data = JSON.parse(message)
-
-      // Cannot parse
-      if (!data.state.reported.hasOwnProperty('payload'))
-        return
 
       // Debug
       //data.state.reported.pm25 = 155
@@ -49,7 +47,34 @@ const mutations = {
       }, {})
     } catch (e) {
       console.log(e)
-      return
+    }
+  },
+  [t.APP_SET_HISTOGRAM] (state, {thingName, buckets}) {
+    try {
+      let tmp = buckets.map(bucket => {
+        return {
+          date: bucket.key,
+          pm25: bucket.v25.value,
+          pm10: bucket.v10.value
+        }
+      })
+      .reduce((a, b) => {
+        a.date.push(b.date)
+        a.pm25.push(b.pm25)
+        a.pm10.push(b.pm10)
+        return a
+      }, {
+        date: [],
+        pm25: [],
+        pm10: []
+      })
+
+      // Copy for reactivity
+      let copy = Object.assign({}, state.histograms)
+      copy[thingName] = tmp
+      state.histograms = copy
+    } catch (e) {
+      console.log(e)
     }
   }
 }
@@ -59,20 +84,24 @@ const actions = {
     return MIC.login(username, password)
       .then(account => {
         commit(t.APP_SET_AUTH, 1)
-        dispatch('getNames')
         MQTT.init(ctx)
+        dispatch('getNames')
         return Promise.resolve(account)
       })
   },
   message ({commit, dispatch}, {topic, message}) {
-    commit(t.APP_SET_DATA, {topic, message})
-
-    // No payload. Probably a newly created thing
-    // Refetch names.
     try {
       let data = JSON.parse(message)
-      if (!data.state.reported.hasOwnProperty('payload'))
+
+      // No payload. Probably a newly created thing
+      // Refetch names.
+      if (!data.state.reported.hasOwnProperty('payload')) {
         dispatch('getNames')
+        return
+      }
+
+      commit(t.APP_SET_DATA, {topic, data})
+
     } catch (e) {
       return
     }
@@ -82,24 +111,22 @@ const actions = {
       action: 'FIND',
       query: {
         size: 50,
-        query: { term: { thingType: '490' } }
+        query: { term: { thingType: THING_TYPE } }
       }
     })
     .then(r => { return r.hits.hits })
     .then(sensors => {
       commit(t.APP_SET_NAMES, sensors)
-      dispatch('getTimeseries')
     })
     .catch(e => {
       console.log(e)
     })
   },
-  getTimeseries ({commit}) {
-    console.log('timeseries')
-    MIC.invoke('ObservationLambda', {
+  getHistogram ({commit}, thingName) {
+    return MIC.invoke('ObservationLambda', {
       action: 'FIND',
       query: {
-        size: 1,
+        size: 0,
         aggs: {
           hist: {
             date_histogram: {
@@ -107,10 +134,7 @@ const actions = {
               interval: '1h',
               time_zone: '+01:00',
               min_doc_count: 1,
-              extended_bounds: {
-                min: '2018-01-29T23:00:00.000Z',
-                max: '2018-02-06T12:33:53.881Z'
-              }
+              extended_bounds: {}
             },
             aggs: {
               v10: { avg: { field: 'state.v10' } },
@@ -118,32 +142,27 @@ const actions = {
             }
           }
         },
-        query: {
-          filtered: {
-            filter: {
-              bool: {
-                must: [
-                  { term: { thingName: '00001338' } },
-                  { range: { timestamp: {
-                    gte: '2018-01-29T23:00:00.000Z',
-                    lte: + new Date()
-                  } } }
-                ],
-                should: [
-                  { exists: { field: 'state.v10' } },
-                  { exists: { field: 'state.v25' } }
-                ]
-              }
-            }
-          }
-        }
+        query: { filtered: { filter: { bool: { must: [
+          { term: { thingName } },
+          { range: { timestamp: {
+            gte: + new Date() - (24 * 60 * 60 * 1000), // 1 day
+            lte: + new Date()
+            } } }
+        ],
+        should: [
+          { exists: { field: 'state.v10' } },
+          { exists: { field: 'state.v25' } }
+        ] } } } }
       }
     })
-    .then(d => {
-      console.log(d)
+    .then(r => { return r.aggregations.hist.buckets })
+    .then(buckets => {
+      commit(t.APP_SET_HISTOGRAM, { thingName, buckets })
+      return Promise.resolve()
     })
     .catch(e => {
       console.log(e)
+      return Promise.reject(e)
     })
   }
 }
@@ -151,6 +170,9 @@ const actions = {
 const getters = {
   auth: (state) => {
     return state.auth
+  },
+  names: (state) => {
+    return state.names
   },
   sensors: (state) => {
     let tmp = state.sensors
@@ -168,6 +190,9 @@ const getters = {
     }
 
     return tmp
+  },
+  histogram: (state) => {
+    return state.histograms
   }
 }
 
