@@ -167,7 +167,7 @@ export default {
           ]
         }
       },
-      color: { pattern: ['#000000', '#000000'] },
+      color: { pattern: ['#555555', '#000000'] },
       point: { show: false },
       legend: { show: false },
       size: { height: 150 }
