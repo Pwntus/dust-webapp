@@ -3,7 +3,6 @@
   span.md-display-3
     | Dust Levels at IFI
     .right
-      | Powered By:
       a(
         href="https://startiot.telenor.com/"
         target="_new"
@@ -71,7 +70,7 @@ export default {
     }
 
     this.timeout = setInterval(this.proc, 15 * 60 * 1000)
-    this.timeoutHist = setInterval(this.toggleHist, 10 * 1000)
+    this.timeoutHist = setInterval(this.toggleHist, 15 * 1000)
   },
   beforeDestroy () {
     clearInterval(this.timeout)
@@ -83,24 +82,20 @@ export default {
 <style lang="scss" scoped>
 #dashboard {
   .md-display-3 {
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     display: block;
 
     .right {
-      padding-top: 17px;
-      font-size: 15px;
-      color: #000;
-      font-weight: 500;
+      padding-top: 23px;
       float: right;
 
       img {
-        height: 36px;
+        height: 35px;
         margin: 0 20px 0 20px;
         border: 0;
         float: right;
 
         &.airbit {
-          height: 37px;
           margin: 0 0 0 20px;
         }
       }

@@ -161,7 +161,7 @@ export default {
           //show: false,
           type: 'timeseries',
           tick: {
-            format: '%H'
+            format: '%-I %p'
           }
         },
         y: {
@@ -203,7 +203,7 @@ export default {
           //show: false,
           type: 'timeseries',
           tick: {
-            format: '%H'//'%I %p'
+            format: '%-I %p'//'%I %p'
           }
         },
         y: {
@@ -250,17 +250,18 @@ export default {
 .graph {
 
   .md-card-content {
-    padding: 0;
+    padding: 0 !important;
 
     .md-body-2 {
       text-align: center;
       display: block;
 
       b {
-        border-bottom: 1px solid #000;
+        padding-left: 10px;
+        border-left: 1px solid #000;
 
         &.dashed {
-          border-bottom: 1px dashed #000;
+          border-left: 1px dashed #000;
         }
       }
     }
@@ -291,7 +292,11 @@ export default {
     .hist-layout {
       height: 200px;
       padding-top: 10px;
-      overflow-y: hidden;
+      overflow: hidden;
+
+      .hist {
+        width: 100%;
+      }
 
       &.show {
         .hist:first-child {
@@ -310,6 +315,12 @@ export default {
           -moz-transition: all .5s ease-in-out;
           -o-transition: all .5s ease-in-out;
           transition: all .5s ease-in-out;
+        }
+      }
+
+      .c3-axis-y, .c3-axis-x {
+        text {
+          fill: rgba(0, 0, 0, .5);
         }
       }
 
