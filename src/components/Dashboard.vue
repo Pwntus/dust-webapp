@@ -1,11 +1,6 @@
 <template lang="pug">
 #dashboard
   span.md-display-3
-    a(
-      href="http://airbit.uit.no/"
-      target="_new"
-    )
-      img(src="../assets/img/airbit-logo.png")
     | Dust Levels at IFI
     .right
       | Powered By:
@@ -14,6 +9,11 @@
         target="_new"
       )
         img(src="../assets/img/startiot-logo.png")
+      a(
+        href="http://airbit.uit.no/"
+        target="_new"
+      )
+        img.airbit(src="../assets/img/airbit-logo.png")
     br.c
   .md-layout.md-alignment-center
     .md-layout-item.md-size-33.md-medium-size-100.md-small-size-100.md-xsmall-size-100(
@@ -23,6 +23,7 @@
       graph(
         :thingName="index"
         :data="data"
+        :showHist="showHist"
       )
 </template>
 
@@ -36,7 +37,9 @@ export default {
   },
   data: () => ({
     proc: null,
-    timeout: null
+    timeout: null,
+    timeoutHist: null,
+    showHist: 0
   }),
   computed: {
     names () {
@@ -51,6 +54,11 @@ export default {
       this.proc()
     }
   },
+  methods: {
+    toggleHist () {
+      this.showHist = this.showHist > 0 ? 0 : 1
+    }
+  },
   mounted () {
     this.proc = async () => {
       for (let thing in this.names) {
@@ -63,9 +71,11 @@ export default {
     }
 
     this.timeout = setInterval(this.proc, 15 * 60 * 1000)
+    this.timeoutHist = setInterval(this.toggleHist, 10 * 1000)
   },
   beforeDestroy () {
     clearInterval(this.timeout)
+    clearInterval(this.timeoutHist)
   }
 }
 </script>
@@ -73,15 +83,8 @@ export default {
 <style lang="scss" scoped>
 #dashboard {
   .md-display-3 {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     display: block;
-
-    img {
-      height: 53px;
-      margin-right: 20px;
-      border: 0;
-      float: left;
-    }
 
     .right {
       padding-top: 17px;
@@ -92,8 +95,14 @@ export default {
 
       img {
         height: 36px;
-        margin: 0 20px 0 10px;
+        margin: 0 20px 0 20px;
+        border: 0;
         float: right;
+
+        &.airbit {
+          height: 37px;
+          margin: 0 0 0 20px;
+        }
       }
     }
 

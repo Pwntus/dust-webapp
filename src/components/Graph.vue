@@ -10,13 +10,16 @@ md-card.graph
   md-card-content
     .md-layout
       .md-layout-item.md-size-50
-        span.md-body-2.grey PM 2.5
+        span.md-body-2
+          b.dashed PM 2.5
         .gauge(ref="pm25")
       .md-layout-item.md-size-50
-        span.md-body-2 PM 10
+        span.md-body-2
+          b PM 10
         .gauge(ref="pm10")
-    .md-layout.hist-layout
-      .hist(ref="hist")
+    .md-layout.hist-layout.show(v-bind:class="{ hide : showHist > 0 }")
+      .hist(ref="hist25")
+      .hist(ref="hist10")
 </template>
 
 <script>
@@ -38,6 +41,10 @@ export default {
     },
     thingName: {
       type: String,
+      required: true
+    },
+    showHist: {
+      type: Number,
       required: true
     }
   },
@@ -80,10 +87,15 @@ export default {
       })
     },
     reloadHist () {
-      this.$chartHist.load({
+      this.$hist25.load({
         columns: [
           ['x', ...this.histogram.date],
-          ['PM 2.5', ...this.histogram.pm25],
+          ['PM 2.5', ...this.histogram.pm25]
+        ]
+      })
+      this.$hist10.load({
+        columns: [
+          ['x', ...this.histogram.date],
           ['PM 10', ...this.histogram.pm10]
         ]
       })
@@ -104,13 +116,13 @@ export default {
         expand: false,
         units: ' µg/m³',
         max: THRESHOLDS.pm25.hour[THRESHOLDS.pm25.hour.length - 1],
-        width: 15
+        width: 10
       },
       color: {
         pattern: COLORS,
         threshold: { values: THRESHOLDS.pm25.hour} 
       },
-      padding: { bottom: 2 }
+      padding: { bottom: 3 }
     })
     this.$chart10 = c3.generate({
       bindto: this.$refs['pm10'],
@@ -126,21 +138,63 @@ export default {
         expand: false,
         units: ' µg/m³',
         max: THRESHOLDS.pm10.hour[THRESHOLDS.pm10.hour.length - 1],
-        width: 15
+        width: 10
       },
       color: {
         pattern: COLORS,
         threshold: { values: THRESHOLDS.pm10.hour }
       },
-      padding: { bottom: 2 }
+      padding: { bottom: 3 }
     })
-    this.$chartHist = c3.generate({
-      bindto: this.$refs['hist'],
+
+    this.$hist25 = c3.generate({
+      bindto: this.$refs['hist25'],
       data: {
         x: 'x',
         columns: [
           ['x', ...this.histogram.date],
-          ['PM 2.5', ...this.histogram.pm25],
+          ['PM 2.5', ...this.histogram.pm25]
+        ]
+      },
+      axis: {
+        x: {
+          //show: false,
+          type: 'timeseries',
+          tick: {
+            format: '%H'
+          }
+        },
+        y: {
+          show: true,
+          max: 150,
+          tick: {
+            values: [25, 40, 150]
+          }
+        }
+      },
+      grid: {
+        lines: { front: false },
+        y: {
+          lines: [
+            //{ value: 25, class: 'gl-one' },
+            { value: 25, class: 'gl-two' },
+            { value: 40, class: 'gl-three' },
+            { value: 150, class: 'gl-four' }
+          ]
+        }
+      },
+      color: { pattern: ['#000000'] },
+      point: { show: false },
+      legend: { show: false },
+      size: { height: 190 },
+      padding: { top: 0, left: 40, right: 20, bottom: 0 }
+    })
+    this.$hist10 = c3.generate({
+      bindto: this.$refs['hist10'],
+      data: {
+        x: 'x',
+        columns: [
+          ['x', ...this.histogram.date],
           ['PM 10', ...this.histogram.pm10]
         ]
       },
@@ -149,28 +203,33 @@ export default {
           //show: false,
           type: 'timeseries',
           tick: {
-            format: '%H:%S'
+            format: '%H'//'%I %p'
           }
         },
         y: {
-          show: false,
-          //max: 400
+          show: true,
+          max: 400,
+          tick: {
+            values: [50, 80, 400]
+          }
         }
       },
       grid: {
+        lines: { front: false },
         y: {
           lines: [
-            { value: 25, class: 'gl-one' },
-            { value: 40, class: 'gl-two' },
-            { value: 150, class: 'gl-three' },
+            //{ value: 50, class: 'gl-one' },
+            { value: 50, class: 'gl-two' },
+            { value: 80, class: 'gl-three' },
             { value: 400, class: 'gl-four' }
           ]
         }
       },
-      color: { pattern: ['#555555', '#000000'] },
+      color: { pattern: ['#000000'] },
       point: { show: false },
       legend: { show: false },
-      size: { height: 150 }
+      size: { height: 190 },
+      padding: { top: 0, left: 40, right: 20, bottom: 0 }
     })
 
     this.timeout = setInterval(() => {
@@ -180,7 +239,8 @@ export default {
   beforeDestroy () {
     this.$chart25 = this.$chart25.destroy()
     this.$chart10 = this.$chart10.destroy()
-    this.$chartHist = this.$chartHist.destroy()
+    this.$hist25 = this.$hist25.destroy()
+    this.$hist10 = this.$hist10.destroy()
     clearInterval(this.timeout)
   }
 }
@@ -190,14 +250,18 @@ export default {
 .graph {
 
   .md-card-content {
-    padding-bottom: 5px;
+    padding: 0;
 
     .md-body-2 {
       text-align: center;
       display: block;
 
-      &.grey {
-        color: #666666;
+      b {
+        border-bottom: 1px solid #000;
+
+        &.dashed {
+          border-bottom: 1px dashed #000;
+        }
       }
     }
 
@@ -212,8 +276,42 @@ export default {
       overflow: visible !important;
     }
 
+    .gauge {
+      height: 100px;
+
+      .c3-chart-arcs-gauge-unit {
+        font-size: 12px !important;
+      }
+
+      .c3-gauge-value {
+        font-size: 15px !important;
+      }
+    }
+
     .hist-layout {
+      height: 200px;
       padding-top: 10px;
+      overflow-y: hidden;
+
+      &.show {
+        .hist:first-child {
+          margin-top: 0;
+          -webkit-transition: all .5s ease-in-out;
+          -moz-transition: all .5s ease-in-out;
+          -o-transition: all .5s ease-in-out;
+          transition: all .5s ease-in-out;
+        }
+      }
+
+      &.hide {
+        .hist:first-child {
+          margin-top: -190px;
+          -webkit-transition: all .5s ease-in-out;
+          -moz-transition: all .5s ease-in-out;
+          -o-transition: all .5s ease-in-out;
+          transition: all .5s ease-in-out;
+        }
+      }
 
       .c3-ygrid-line {
         &.gl-one line {
@@ -228,6 +326,10 @@ export default {
         &.gl-four line {
           stroke: rgba(153, 0, 153, .4);
         }
+
+        /*& line {
+          stroke: rgba(0, 0, 0, .1) !important;
+        }*/
       }
 
       .c3-target-PM-2-5 {
