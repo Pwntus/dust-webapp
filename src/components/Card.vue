@@ -7,7 +7,7 @@ md-card
         classifier(:data="data")
       .md-subhead {{ when }}
   md-card-content
-    .md-layout
+    .md-layout.gauge-layout
       .md-layout-item.md-size-50(v-bind:class="{ faded : showHist > 0}")
         span.md-body-2 PM 2.5
         gauge(
@@ -86,8 +86,12 @@ export default {
   .md-card-content {
     padding: 0 !important;
 
-    .faded {
-      opacity: .2;
+    .gauge-layout {
+      padding: 0 16px;
+      
+      .faded {
+        opacity: .2;
+      }
     }
 
     .md-body-2 {

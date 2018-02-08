@@ -65,7 +65,7 @@ export default {
 
 <style lang="scss">
 .gauge {
-  height: 100px;
+  max-height: 100px;
 
   .c3-chart-arcs-background {
     fill: #e0e0e0;
