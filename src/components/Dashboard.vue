@@ -15,24 +15,24 @@
         img.airbit(src="../assets/img/airbit-logo.png")
     br.c
   .md-layout.md-alignment-center
-    .md-layout-item.md-size-33.md-medium-size-100.md-small-size-100.md-xsmall-size-100(
+    .md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100(
       v-for="(data, index) in sensors"
       :index="index"
     )
-      graph(
-        :thingName="index"
+      card(
+        :thing-name="index"
+        :show-hist="showHist"
         :data="data"
-        :showHist="showHist"
       )
 </template>
 
 <script>
-import Graph from '@/components/Graph'
+import Card from '@/components/Card'
 
 export default {
   name: 'Dashboard',
   components: {
-    Graph
+    Card
   },
   data: () => ({
     proc: null,
