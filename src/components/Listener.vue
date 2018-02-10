@@ -1,7 +1,4 @@
-<template lang="pug">
-#listener
-</template>
-
+<template></template>
 <script>
 export default {
   name: 'Listener',
@@ -29,8 +26,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-#listener {
-}
-</style>

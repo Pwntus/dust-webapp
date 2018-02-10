@@ -1,80 +1,36 @@
 <template lang="pug">
 #dashboard
+  reloader
   span.md-display-3
     | Dust Levels at IFI
     .right
-      a(
-        href="https://startiot.telenor.com/"
-        target="_new"
-      )
+      a(href="https://startiot.telenor.com/" target="_blank")
         img(src="../assets/img/startiot-logo.png")
-      a(
-        href="http://airbit.uit.no/"
-        target="_new"
-      )
+      a(href="http://airbit.uit.no/" target="_blank")
         img.airbit(src="../assets/img/airbit-logo.png")
-    br.c
+    .c
   .md-layout.md-alignment-center
-    .md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100(
-      v-for="(data, index) in sensors"
-      :index="index"
+    card(
+      v-for="(sensor, index) in sensors"
+      :sensor="sensor"
+      :key="index"
     )
-      card(
-        :thing-name="index"
-        :show-hist="showHist"
-        :data="data"
-      )
 </template>
 
 <script>
+import Reloader from '@/components/Reloader'
 import Card from '@/components/Card'
 
 export default {
   name: 'Dashboard',
   components: {
+    Reloader,
     Card
   },
-  data: () => ({
-    proc: null,
-    timeout: null,
-    timeoutHist: null,
-    showHist: 0
-  }),
   computed: {
-    names () {
-      return this.$store.getters['App/names']
-    },
     sensors () {
       return this.$store.getters['App/sensors']
     }
-  },
-  watch: {
-    names: function (names) {
-      this.proc()
-    }
-  },
-  methods: {
-    toggleHist () {
-      this.showHist = this.showHist > 0 ? 0 : 1
-    }
-  },
-  mounted () {
-    this.proc = async () => {
-      for (let thing in this.names) {
-        try {
-          var res = await this.$store.dispatch('App/getHistogram', thing)
-        } catch (e) {
-          console.log(e)
-        }
-      }
-    }
-
-    this.timeout = setInterval(this.proc, 15 * 60 * 1000)
-    this.timeoutHist = setInterval(this.toggleHist, 15 * 1000)
-  },
-  beforeDestroy () {
-    clearInterval(this.timeout)
-    clearInterval(this.timeoutHist)
   }
 }
 </script>
@@ -90,7 +46,7 @@ export default {
       float: right;
 
       img {
-        height: 35px;
+        height: 25px;
         margin: 0 20px 0 20px;
         border: 0;
         float: right;

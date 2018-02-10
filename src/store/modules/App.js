@@ -180,6 +180,8 @@ const getters = {
     // Add names from map
     try {
       for (let key in tmp) {
+        tmp[key].id = key
+        
         if (state.names.hasOwnProperty(key))
           tmp[key].name = state.names[key]
         else

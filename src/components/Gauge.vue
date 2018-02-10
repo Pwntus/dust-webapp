@@ -1,81 +1,98 @@
 <template lang="pug">
-.gauge(ref="gauge")
+.gauge
+  md-chip(:class="data.class") {{ data.text }}
+  md-progress-bar(
+    md-mode="determinate"
+    :md-value="value / max"
+    :class="data.class"
+  )
 </template>
 
 <script>
-import c3 from 'c3'
 import {
   COLORS,
-  THRESHOLDS
+  THRESHOLDS,
+  DEFAULT_FRAME
 } from '@/config'
 
-const UNIT = 'µg/m³'
-const WIDTH = 10
+const TEXT  = ['Normal', 'Moderate', 'High', 'Extremely High']
+const CLASS = ['normal', 'moderate', 'high', 'xhigh']
 
 export default {
   name: 'Gauge',
-  props: {
-    value:    { type: Number, required: true },
-    particle: { type: String, required: true },
-    frame:    { type: String, required: true }
-  },
-  watch: {
-    value: {
-      handler: 'reload',
-      deep: true
+  props: ['value', 'particle'],
+  computed: {
+    max () {
+      let th = THRESHOLDS[this.particle][DEFAULT_FRAME]
+      return th[th.length - 1]
+    },
+    data () {
+      let th = THRESHOLDS[this.particle][DEFAULT_FRAME]
+
+      let index = 0
+      for (let i = 0; i < th.length; i++) {
+        if (this.value >= th[i])
+          index = i + 1
+      }
+      return {
+        text:  TEXT[index],
+        class: CLASS[index]
+      }
     }
-  },
-  methods: {
-    reload () {
-      this.$gauge.load({
-        unload: true,
-        columns: [ [UNIT, this.value] ]
-      })
-    }
-  },
-  mounted () {
-    this.$gauge = c3.generate({
-      bindto: this.$refs.gauge,
-      data: {
-        columns: [ [UNIT, this.value] ],
-        type: 'gauge'
-      },
-      gauge: {
-        label: {
-           format: (value, ratio) => { return value },
-           show: true
-        },
-        expand: false,
-        units: ` ${UNIT}`,
-        max: THRESHOLDS[this.particle][this.frame][THRESHOLDS[this.particle][this.frame].length - 1],
-        width: WIDTH
-      },
-      color: {
-        pattern: COLORS,
-        threshold: { values: THRESHOLDS[this.particle][this.frame] } 
-      },
-      padding: { bottom: 3 }
-    })
-  },
-  beforeDestroy () {
-    this.$gauge = this.$gauge.destroy()
   }
 }
 </script>
 
 <style lang="scss">
 .gauge {
-  max-height: 100px;
+  width: 100%;
 
-  .c3-chart-arcs-background {
-    fill: #e0e0e0;
-    stroke: none;
+  .md-chip {
+    height: 30px;
+    padding: 0 10px;
+    color: #FFF;
+    border-radius: 4px 0 0 4px;
+    float: left;
+
+    &.normal {
+      background-color: #53d053;
+    }
+    &.moderate {
+      background-color: #ff9900;
+    }
+    &.high {
+      background-color: #ff0000;
+    }
+    &.xhigh {
+      background-color: #990099;
+    }
   }
-  .c3-chart-arcs-gauge-unit {
-    font-size: 12px !important;
-  }
-  .c3-gauge-value {
-    font-size: 15px !important;
+
+  .md-progress-bar {
+    height: 30px;
+    border-radius: 0 4px 4px 0;
+    background-color: rgba(0, 0, 0, .02) !important;
+
+    &.normal {
+      .md-progress-bar-fill {
+        background-color: #53d053;
+      }
+    }
+    &.moderate {
+      .md-progress-bar-fill {
+        background-color: #ff9900;
+      }
+    }
+    &.high {
+      .md-progress-bar-fill {
+        background-color: #ff0000;
+      }
+    }
+    &.xhigh {
+      .md-progress-bar-fill {
+        background-color: #990099;
+      }
+    }
   }
 }
 </style>

@@ -1,76 +1,49 @@
 <template lang="pug">
-md-card
-  md-card-header
-    md-card-header-text
-      .md-title
-        | {{ data.name }}
-        classifier(:data="data")
-      .md-subhead {{ when }}
-  md-card-content
-    .md-layout.gauge-layout
-      .md-layout-item.md-size-50(v-bind:class="{ faded : showHist > 0}")
-        span.md-body-2 PM 2.5
+.card.md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100
+  md-card
+    md-card-header
+      md-card-header-text
+        .md-title {{ sensor.name }}
+        .md-subhead {{ when }} {{ sensor.v25 }} {{ sensor.v10 }}
+    md-card-content
+      .md-layout.md-size-100
         gauge(
-          :value="data.pm25"
+          :value="sensor.v25"
           particle="pm25"
-          frame="hour"
         )
-      .md-layout-item.md-size-50(v-bind:class="{ faded : showHist < 1}")
-        span.md-body-2 PM 10
+        graph(
+          :histogram="histogram"
+          particle="pm25"
+        )
+      .md-layout.md-size-100
         gauge(
-          :value="data.pm10"
+          :value="40"
           particle="pm10"
-          frame="hour"
         )
-    .md-layout.hist-layout(v-bind:class="{ hide : showHist > 0 }")
-      histogram(
-        :thing-name="thingName"
-        particle="pm25"
-        particle-text="PM 2.5"
-        frame="hour"
-      )
-      histogram(
-        :thing-name="thingName"
-        particle="pm10"
-        particle-text="PM 10"
-        frame="hour"
-      )
 </template>
 
 <script>
-import Classifier from '@/components/Classifier'
 import Gauge from '@/components/Gauge'
-import Histogram from '@/components/Histogram'
-import moment from 'moment'
-import c3 from 'c3'
-import {
-  COLORS,
-  THRESHOLDS
-} from '@/config'
+import Graph from '@/components/Graph'
 
 export default {
   name: 'Card',
+  props: ['sensor'],
   components: {
-    Classifier,
     Gauge,
-    Histogram
-  },
-  props: {
-    data:      { type: Object, default: () => ({}) },
-    thingName: { type: String, required: true },
-    showHist:  { type: Number, required: true }
+    Graph
   },
   data: () => ({
-    when: 'never',
-    timeout: null
+    when: 'never'
   }),
-  mounted () {
-    this.timeout = setInterval(() => {
-      this.when = moment(this.data.timestamp).fromNow()
-    }, 10000)
-  },
-  beforeDestroy () {
-    clearInterval(this.timeout)
+  computed: {
+    histogram () {
+      let hist = this.$store.getters['App/histogram']
+      if (!hist.hasOwnProperty(this.sensor.id))
+        return { date: [], pm25: [], pm10: [] }
+
+      return hist[this.sensor.id]
+    }
   }
 }
 </script>
@@ -84,41 +57,6 @@ export default {
   }
 
   .md-card-content {
-    padding: 0 !important;
-
-    .gauge-layout {
-      padding: 0 16px;
-      
-      .faded {
-        opacity: .2;
-      }
-    }
-
-    .md-body-2 {
-      text-align: center;
-      display: block;
-    }
-
-    .hist-layout {
-      height: 200px;
-      padding-top: 10px;
-      overflow: hidden;
-
-      .hist {
-        width: 100%;
-        margin-top: 0;
-        -webkit-transition: all .5s ease-in-out;
-        -moz-transition: all .5s ease-in-out;
-        -o-transition: all .5s ease-in-out;
-        transition: all .5s ease-in-out;
-      }
-
-      &.hide {
-        .hist:first-child {
-          margin-top: -190px;
-        }
-      }
-    }
 
   }
 }
