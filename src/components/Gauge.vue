@@ -1,14 +1,15 @@
 <template lang="pug">
 .gauge
-  md-chip(:class="data.class") {{ data.text }} ({{ value.toFixed(2) }})
+  md-chip(:class="data.class") {{ particle }} {{ data.text }} ({{ value.toFixed(2) }})
   md-progress-bar(
     md-mode="determinate"
-    :md-value="value / max"
+    :md-value="(value / max) * 100"
     :class="data.class"
   )
 </template>
 
 <script>
+import c3 from 'c3'
 import {
   COLORS,
   THRESHOLDS,
@@ -22,16 +23,16 @@ export default {
   name: 'Gauge',
   props: ['value', 'particle'],
   computed: {
+    th () {
+      return THRESHOLDS[this.particle][DEFAULT_FRAME]
+    },
     max () {
-      let th = THRESHOLDS[this.particle][DEFAULT_FRAME]
-      return th[th.length - 1]
+      return this.th[this.th.length - 1]
     },
     data () {
-      let th = THRESHOLDS[this.particle][DEFAULT_FRAME]
-
       let index = 0
-      for (let i = 0; i < th.length; i++) {
-        if (this.value >= th[i])
+      for (let i = 0; i < this.th.length; i++) {
+        if (this.value >= this.th[i])
           index = i + 1
       }
       return {
@@ -48,10 +49,12 @@ export default {
   width: 100%;
 
   .md-chip {
-    height: 30px;
+    height: 23px;
     padding: 0 10px;
     color: #FFF;
-    border-radius: 4px 0 0 4px;
+    line-height: 23px;
+    border-radius: 5px 0 0 5px;
+    font-size: 11px;
     float: left;
 
     &.normal {
@@ -69,8 +72,8 @@ export default {
   }
 
   .md-progress-bar {
-    height: 30px;
-    border-radius: 0 4px 4px 0;
+    height: 23px;
+    border-radius: 0 5px 5px 0;
     background-color: rgba(0, 0, 0, .02) !important;
 
     &.normal {

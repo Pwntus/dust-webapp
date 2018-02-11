@@ -131,7 +131,7 @@ const actions = {
           hist: {
             date_histogram: {
               field: 'timestamp',
-              interval: '6h',
+              interval: '3h',
               time_zone: '+01:00',
               min_doc_count: 1,
               extended_bounds: {}
@@ -145,7 +145,7 @@ const actions = {
         query: { filtered: { filter: { bool: { must: [
           { term: { thingName } },
           { range: { timestamp: {
-            gte: + new Date() - (4 * 24 * 60 * 60 * 1000), // 1 day
+            gte: + new Date() - (7 * 24 * 60 * 60 * 1000), // 1 day
             lte: + new Date()
             } } }
         ],

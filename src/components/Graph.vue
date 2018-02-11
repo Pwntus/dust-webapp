@@ -3,7 +3,7 @@
   histogram(
     :chart-data="data"
     :options="options"
-    ref="localHisto"
+    ref="localHistogram"
   )
 </template>
 
@@ -16,16 +16,52 @@ import {
   DEFAULT_FRAME
 } from '@/config'
 
+const OVERFLOW = 50
+
 export default {
   name: 'Graph',
   props: ['histogram', 'particle'],
   components: { Histogram },
+  data: () => ({
+    gradient: null
+  }),
   computed: {
-    config () {
-      let th = THRESHOLDS[this.particle][DEFAULT_FRAME]
-      let max = th[th.length - 1]
-
-      return { max }
+    th () {
+      return THRESHOLDS[this.particle][DEFAULT_FRAME]
+    },
+    ratios () {
+      return this.th.map(v => v / this.max)
+    },
+    max () {
+      return this.th[this.th.length - 1] + OVERFLOW
+    },
+    annotations () {
+      let annotations = []
+      for (let i = 0; i < this.th.length; i++) {
+        annotations.push({
+          type: 'line',
+          drawTime: 'beforeDatasetsDraw',
+          mode: 'horizontal',
+          scaleID: 'y-axis-0',
+          value: this.th[i],
+          borderColor: '#fff',
+          borderWidth: 1,
+          borderDash: [5, 1],
+          label: {
+            enabled: true,
+            content: this.th[i],
+            backgroundColor: '#FFF',
+            position: 'left',
+            fontSize: 9,
+            fontColor: '#555',
+            fontStyle: 'normal',
+            xPadding: 4,
+            yPadding: 0,
+            xAdjust: -4
+          }
+        })
+      }
+      return annotations
     },
     data () {
       return {
@@ -50,6 +86,7 @@ export default {
             hitRadius: 40
           },
           line: {
+            borderWidth: 2,
             fill: false
           }
         },
@@ -61,35 +98,46 @@ export default {
               zeroLineColor: 'transparent'
             },
             ticks: {
-              maxRotation: 0
+              maxRotation: 0,
+              fontSize: 10
             }
           }],
           yAxes: [{
+            display: false,
             gridLines: {
               display: false,
               drawBorder: false
             },
             ticks: {
               min: 0,
-              max: this.config.max
+              max: this.max,
+              beginAtZero: true
             }
           }]
-        }
+        },
+        annotation: { annotations: this.annotations }
       }
     }
   },
-  data: () => ({
-    gradient: null
-  }),
   mounted () {
-    let canvas = this.$refs.localHisto.$refs.canvas
-    this.gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 200)
-    this.gradient.addColorStop(0, 'red')
-    this.gradient.addColorStop(0.5, 'red')
-    this.gradient.addColorStop(0.5, 'orange');
-    this.gradient.addColorStop(0.8, 'orange');
-    this.gradient.addColorStop(0.8, 'green');
-    this.gradient.addColorStop(1, 'green');
+    let canvas = this.$refs.localHistogram.$refs.canvas
+    let chart = this.$refs.localHistogram.$data._chart
+
+    let yAxis = chart.scales['y-axis-0']
+    let minValueYPixel = yAxis.getPixelForValue(0)
+    let maxValueYPixel = yAxis.getPixelForValue(this.max)
+    this.gradient = canvas.getContext('2d').createLinearGradient(0, minValueYPixel, 0, maxValueYPixel)
+
+    let curColor = COLORS[0]
+    this.gradient.addColorStop(0, curColor)
+    for (let i = 0; i < this.ratios.length; i++) {
+      this.gradient.addColorStop(this.ratios[i], curColor)
+      curColor = COLORS[i + 1]
+      this.gradient.addColorStop(this.ratios[i], curColor)
+    }
+    // Overflow
+    //this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])
+    //this.gradient.addColorStop(1, COLORS[COLORS.length - 1])
   }
 }
 </script>
@@ -100,7 +148,7 @@ export default {
   position: relative;
 
   canvas {
-    height: 200px;
+    height: 140px;
   }
 }
 </style>

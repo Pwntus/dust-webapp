@@ -6,24 +6,23 @@
         .md-title {{ sensor.name }}
         .md-subhead {{ when }}
     md-card-content
-      .md-layout.md-size-100
-        gauge(
-          :value="sensor.v25"
-          particle="pm25"
-        )
-        graph(
-          :histogram="histogram"
-          particle="pm25"
-        )
-      .md-layout.md-size-100
-        gauge(
-          :value="sensor.v10"
-          particle="pm10"
-        )
-        graph(
-          :histogram="histogram"
-          particle="pm10"
-        )
+      .md-layout
+          gauge(
+            :value="sensor.v25+50"
+            particle="pm25"
+          )
+          graph(
+            :histogram="histogram"
+            particle="pm25"
+          )
+          gauge(
+            :value="sensor.v10"
+            particle="pm10"
+          )
+          graph(
+            :histogram="histogram"
+            particle="pm10"
+          )
 </template>
 
 <script>
@@ -56,12 +55,15 @@ export default {
 .md-card {
   overflow: hidden;
 
-  .md-title {
-    margin-top: 0 !important;
+  .md-card-header {
+
+    .md-title {
+      margin-top: 0 !important;
+    }
   }
 
   .md-card-content {
-
+    padding: 0 10px 10px !important;
   }
 }
 </style>
