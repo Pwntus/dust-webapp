@@ -4,7 +4,7 @@
     md-card-header
       md-card-header-text
         .md-title {{ sensor.name }}
-        .md-subhead {{ when }} {{ sensor.v25 }} {{ sensor.v10 }}
+        .md-subhead {{ when }}
     md-card-content
       .md-layout.md-size-100
         gauge(
@@ -17,7 +17,11 @@
         )
       .md-layout.md-size-100
         gauge(
-          :value="40"
+          :value="sensor.v10"
+          particle="pm10"
+        )
+        graph(
+          :histogram="histogram"
           particle="pm10"
         )
 </template>

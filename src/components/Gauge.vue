@@ -1,6 +1,6 @@
 <template lang="pug">
 .gauge
-  md-chip(:class="data.class") {{ data.text }}
+  md-chip(:class="data.class") {{ data.text }} ({{ value.toFixed(2) }})
   md-progress-bar(
     md-mode="determinate"
     :md-value="value / max"

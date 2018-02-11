@@ -1,53 +1,21 @@
 <script>
 import { Line, mixins } from 'vue-chartjs'
 const { reactiveProp } = mixins
-import { THRESHOLDS } from '@/config'
-import '@/lib/Chart.Bands.min'
+//import '@/lib/Chart.Bands.min'
 
 export default {
   extends: Line,
   mixins: [reactiveProp],
-  data: () => ({
+  props: ['options', 'chartData'],
+  watch: {
     options: {
-      legend: false,
-      responsive: true,
-      elements: {
-        point: {
-          radius: 0,
-          hoverRadius: 0,
-          hitRadius: 40
-        },
-        line: {
-          fill: false
-        }
+      handler (newOption, oldOption) {
+        this.$data._chart.destroy()
+        this.renderChart(this.chartData, this.options)
       },
-      scales: {
-        xAxes: [{
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          }
-        }],
-        yAxes: [{
-          gridLines: {
-            drawBorder: false
-          },
-          ticks: {
-            min: 0,
-            max: 30
-          }
-        }]
-      },
-      bands: [
-      {
-        from: 0,
-        to: 20,
-        yValue: 5,
-        color: 'red'
-      }
-      ]
+      deep: true
     }
-  }),
+  },
   mounted () {
     this.renderChart(this.chartData, this.options)
   }
