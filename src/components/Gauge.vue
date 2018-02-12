@@ -1,15 +1,25 @@
 <template lang="pug">
 .gauge
-  md-chip(:class="data.class") {{ particle }} {{ data.text }} ({{ value.toFixed(2) }})
-  md-progress-bar(
-    md-mode="determinate"
-    :md-value="(value / max) * 100"
-    :class="data.class"
+  b {{ data.particleText }} µg/m³
+  vue-circle(
+    :progress="valuePc"
+    :size="90"
+    line-cap="round"
+    :fill="fill"
+    empty-fill="rgba(0, 0, 0, .05)"
+    insert-mode="append"
+    :thickness="5"
+    :show-percent="false"
+    ref="roundGauge"
   )
+    p(:class="data.class")
+      | {{ data.text }}
+      br
+      | {{ value.toFixed(1) }}
 </template>
 
 <script>
-import c3 from 'c3'
+import VueCircle from 'vue2-circle-progress'
 import {
   COLORS,
   THRESHOLDS,
@@ -18,16 +28,43 @@ import {
 
 const TEXT  = ['Normal', 'Moderate', 'High', 'Extremely High']
 const CLASS = ['normal', 'moderate', 'high', 'xhigh']
+const OVERFLOW = 50
 
 export default {
   name: 'Gauge',
   props: ['value', 'particle'],
+  components: { VueCircle },
+  watch: {
+    value: {
+      handler (newValue, oldValue) {
+        this.$refs.roundGauge.updateProgress(newValue);
+      }
+    }
+  },
   computed: {
     th () {
       return THRESHOLDS[this.particle][DEFAULT_FRAME]
     },
     max () {
-      return this.th[this.th.length - 1]
+      return this.th[this.th.length - 1] + OVERFLOW
+    },
+    valuePc () {
+      let pc = (this.value / this.max)
+      pc = pc > 1 ? 1 : pc
+      return pc * 100
+    },
+    fill () {
+      let gradient = [[COLORS[0], 0]]
+
+      for (let i = 0; i < this.th.length; i ++) {
+        gradient.push([
+          COLORS[i + 1],
+          (this.th[i] / this.max)
+        ])
+      }
+      gradient.push([COLORS[COLORS.length - 1], 1])
+
+      return { gradient: COLORS }
     },
     data () {
       let index = 0
@@ -35,9 +72,11 @@ export default {
         if (this.value >= this.th[i])
           index = i + 1
       }
+      let map = { pm25: 'PM 2.5', pm10: 'PM 10'}
       return {
         text:  TEXT[index],
-        class: CLASS[index]
+        class: CLASS[index],
+        particleText: map[this.particle]
       }
     }
   }
@@ -47,55 +86,24 @@ export default {
 <style lang="scss">
 .gauge {
   width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  font-size: 10px;
 
-  .md-chip {
-    height: 23px;
-    padding: 0 10px;
-    color: #FFF;
-    line-height: 23px;
-    border-radius: 5px 0 0 5px;
-    font-size: 11px;
-    float: left;
+  .circle {
+    p {
+      line-height: 15px;
 
-    &.normal {
-      background-color: #53d053;
-    }
-    &.moderate {
-      background-color: #ff9900;
-    }
-    &.high {
-      background-color: #ff0000;
-    }
-    &.xhigh {
-      background-color: #990099;
+      &.normal   { color: #53d053; }
+      &.moderate { color: #ff9900; }
+      &.high     { color: #ff0000; }
+      &.xhigh    { color: #990099; }
     }
   }
 
-  .md-progress-bar {
-    height: 23px;
-    border-radius: 0 5px 5px 0;
-    background-color: rgba(0, 0, 0, .02) !important;
-
-    &.normal {
-      .md-progress-bar-fill {
-        background-color: #53d053;
-      }
-    }
-    &.moderate {
-      .md-progress-bar-fill {
-        background-color: #ff9900;
-      }
-    }
-    &.high {
-      .md-progress-bar-fill {
-        background-color: #ff0000;
-      }
-    }
-    &.xhigh {
-      .md-progress-bar-fill {
-        background-color: #990099;
-      }
-    }
+  .info {
+    
   }
 }
 </style>

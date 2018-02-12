@@ -148,7 +148,7 @@ export default {
   position: relative;
 
   canvas {
-    height: 140px;
+    height: 140px !important;
   }
 }
 </style>

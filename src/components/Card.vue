@@ -7,25 +7,30 @@
         .md-subhead {{ when }}
     md-card-content
       .md-layout
-          gauge(
-            :value="sensor.v25+50"
-            particle="pm25"
-          )
+        .md-layout-item.md-size-80
           graph(
             :histogram="histogram"
             particle="pm25"
           )
+        .md-layout-item.md-size-20
           gauge(
-            :value="sensor.v10"
+            :value="sensor.v25"
+            particle="pm25"
+          )
+        .md-layout-item.md-size-80
+          graph(
+            :histogram="histogram"
             particle="pm10"
           )
-          graph(
-            :histogram="histogram"
+        .md-layout-item.md-size-20
+          gauge(
+            :value="sensor.v10"
             particle="pm10"
           )
 </template>
 
 <script>
+import moment from 'moment'
 import Gauge from '@/components/Gauge'
 import Graph from '@/components/Graph'
 
@@ -37,7 +42,8 @@ export default {
     Graph
   },
   data: () => ({
-    when: 'never'
+    when: 'never',
+    timeout: null
   }),
   computed: {
     histogram () {
@@ -47,6 +53,14 @@ export default {
 
       return hist[this.sensor.id]
     }
+  },
+  mounted () {
+    this.timeout = setInterval(() => {
+      this.when = moment(this.sensor.timestamp).fromNow()
+    }, 10000)
+  },
+  beforeDestroy () {
+    clearInterval(this.timeout)
   }
 }
 </script>
@@ -56,7 +70,8 @@ export default {
   overflow: hidden;
 
   .md-card-header {
-
+    padding-bottom: 0;
+    
     .md-title {
       margin-top: 0 !important;
     }
