@@ -12,7 +12,7 @@
             :histogram="histogram"
             particle="pm25"
           )
-        .md-layout-item.md-size-20
+        .md-layout-item.md-size-20.md-alignment-center-center
           gauge(
             :value="sensor.v25"
             particle="pm25"
@@ -22,7 +22,7 @@
             :histogram="histogram"
             particle="pm10"
           )
-        .md-layout-item.md-size-20
+        .md-layout-item.md-size-20.md-alignment-center-center
           gauge(
             :value="sensor.v10"
             particle="pm10"
@@ -79,6 +79,10 @@ export default {
 
   .md-card-content {
     padding: 0 10px 10px !important;
+
+    .md-layout {
+      align-items: center;
+    }
   }
 }
 </style>

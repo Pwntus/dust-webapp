@@ -16,7 +16,7 @@ import {
   DEFAULT_FRAME
 } from '@/config'
 
-const OVERFLOW = 50
+const OVERFLOW = 500
 
 export default {
   name: 'Graph',
@@ -40,23 +40,23 @@ export default {
       for (let i = 0; i < this.th.length; i++) {
         annotations.push({
           type: 'line',
-          drawTime: 'beforeDatasetsDraw',
+          drawTime: 'afterDatasetsDraw',
           mode: 'horizontal',
           scaleID: 'y-axis-0',
           value: this.th[i],
-          borderColor: '#fff',
+          borderColor: 'transparent',
           borderWidth: 1,
           borderDash: [5, 1],
           label: {
             enabled: true,
-            content: this.th[i],
+            content: (this.th[i] >= 100 ? this.th[i] + ' –' : this.th[i] + ' —'),
             backgroundColor: '#FFF',
             position: 'left',
             fontSize: 9,
-            fontColor: '#555',
+            fontColor: '#444',
             fontStyle: 'normal',
             xPadding: 4,
-            yPadding: 0,
+            yPadding: 2,
             xAdjust: -4
           }
         })
@@ -104,6 +104,7 @@ export default {
           }],
           yAxes: [{
             display: false,
+            type: 'logarithmic',
             gridLines: {
               display: false,
               drawBorder: false
@@ -128,12 +129,13 @@ export default {
     let maxValueYPixel = yAxis.getPixelForValue(this.max)
     this.gradient = canvas.getContext('2d').createLinearGradient(0, minValueYPixel, 0, maxValueYPixel)
 
+
     let curColor = COLORS[0]
     this.gradient.addColorStop(0, curColor)
-    for (let i = 0; i < this.ratios.length; i++) {
-      this.gradient.addColorStop(this.ratios[i], curColor)
+    for (let i = 0; i < this.th.length; i++) {
+      this.gradient.addColorStop(1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel), curColor)
       curColor = COLORS[i + 1]
-      this.gradient.addColorStop(this.ratios[i], curColor)
+      this.gradient.addColorStop(1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel), curColor)
     }
     // Overflow
     //this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])
@@ -148,7 +150,7 @@ export default {
   position: relative;
 
   canvas {
-    height: 140px !important;
+    height: 190px !important;
   }
 }
 </style>

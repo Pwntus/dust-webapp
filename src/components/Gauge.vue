@@ -86,10 +86,15 @@ export default {
 <style lang="scss">
 .gauge {
   width: 100%;
-  height: 100%;
   position: relative;
   text-align: center;
   font-size: 10px;
+
+  b {
+    padding-bottom: 5px;
+    line-height: 10px;
+    display: block;
+  }
 
   .circle {
     p {
