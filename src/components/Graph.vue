@@ -79,11 +79,15 @@ export default {
         legend: false,
         responsive: true,
         maintainAspectRatio: false,
+        tooltips: {
+          intersect: false,
+          cornerRadius: 3,
+          displayColors: false
+        },
         elements: {
           point: {
             radius: 0,
-            hoverRadius: 0,
-            hitRadius: 40
+            hoverRadius: 0
           },
           line: {
             borderWidth: 2,
