@@ -103,7 +103,8 @@ export default {
             },
             ticks: {
               maxRotation: 0,
-              fontSize: 10
+              fontSize: 10,
+              source: 'data'
             }
           }],
           yAxes: [{
@@ -133,13 +134,16 @@ export default {
     let maxValueYPixel = yAxis.getPixelForValue(this.max)
     this.gradient = canvas.getContext('2d').createLinearGradient(0, minValueYPixel, 0, maxValueYPixel)
 
-
     let curColor = COLORS[0]
     this.gradient.addColorStop(0, curColor)
     for (let i = 0; i < this.th.length; i++) {
-      this.gradient.addColorStop(1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel), curColor)
+      let pc = 1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel)
+      pc = pc < 0 ? 0 : pc
+      pc = pc > 1 ? 1 : pc
+
+      this.gradient.addColorStop(pc, curColor)
       curColor = COLORS[i + 1]
-      this.gradient.addColorStop(1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel), curColor)
+      this.gradient.addColorStop(pc, curColor)
     }
     // Overflow
     //this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])

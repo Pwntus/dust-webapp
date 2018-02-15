@@ -69,6 +69,37 @@ const mutations = {
         pm10: []
       })
 
+      // We have data
+      if (tmp.date.length > 0) {
+
+        let x = []
+        let latest = tmp.date[tmp.date.length - 1]
+        for (let i = 0; i < 24; i++) {
+          x.unshift(latest)
+          latest -= 60 * 60 * 1000
+        }
+
+        let final = {
+          date: x,
+          pm25: [],
+          pm10: []
+        }
+        let ocount = 0
+        for (let i = 0; i < x.length; i++) {
+
+          if (!tmp.date.includes(x[i])) {
+            final.pm25.push(0)
+            final.pm10.push(0)
+          } else {
+            final.pm25.push(tmp.pm25[ocount])
+            final.pm10.push(tmp.pm10[ocount])
+            ocount++
+          }
+        }
+
+        tmp = final
+      }
+
       // Copy for reactivity
       let copy = Object.assign({}, state.histograms)
       copy[thingName] = tmp

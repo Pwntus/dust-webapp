@@ -3,19 +3,19 @@
   b {{ data.particleText }} µg/m³
   vue-circle(
     :progress="valuePc"
-    :size="90"
+    :size="150"
     line-cap="round"
-    :fill="fill"
+    :fill="data.fill"
     empty-fill="rgba(0, 0, 0, .05)"
     insert-mode="append"
-    :thickness="5"
+    :thickness="8"
     :show-percent="false"
     ref="roundGauge"
   )
     p(:class="data.class")
       | {{ data.text }}
       br
-      | {{ value.toFixed(1) }}
+      span {{ value.toFixed(1) }}
 </template>
 
 <script>
@@ -37,7 +37,7 @@ export default {
   watch: {
     value: {
       handler (newValue, oldValue) {
-        this.$refs.roundGauge.updateProgress(newValue);
+        this.$refs.roundGauge.updateProgress(this.valuePc);
       }
     }
   },
@@ -50,21 +50,8 @@ export default {
     },
     valuePc () {
       let pc = (this.value / this.max)
-      pc = pc > 1 ? 1 : pc
+      //pc = pc > 1 ? 1 : pc
       return pc * 100
-    },
-    fill () {
-      let gradient = [[COLORS[0], 0]]
-
-      for (let i = 0; i < this.th.length; i ++) {
-        gradient.push([
-          COLORS[i + 1],
-          (this.th[i] / this.max)
-        ])
-      }
-      gradient.push([COLORS[COLORS.length - 1], 1])
-
-      return { gradient: COLORS }
     },
     data () {
       let index = 0
@@ -76,7 +63,8 @@ export default {
       return {
         text:  TEXT[index],
         class: CLASS[index],
-        particleText: map[this.particle]
+        particleText: map[this.particle],
+        fill: { color: COLORS[index] }
       }
     }
   }
@@ -104,6 +92,10 @@ export default {
       &.moderate { color: #ff9900; }
       &.high     { color: #ff0000; }
       &.xhigh    { color: #990099; }
+
+      span {
+        font-size: 15px;
+      }
     }
   }
 
