@@ -37,7 +37,8 @@ export default {
   watch: {
     value: {
       handler (newValue, oldValue) {
-        this.$refs.roundGauge.updateProgress(this.valuePc);
+        this.$refs.roundGauge.updateProgress(this.valuePc)
+        this.$refs.roundGauge.updateFill(this.data.fill.color)
       }
     }
   },
@@ -50,7 +51,7 @@ export default {
     },
     valuePc () {
       let pc = (this.value / this.max)
-      //pc = pc > 1 ? 1 : pc
+      pc = pc > 100 ? 100 : pc
       return pc * 100
     },
     data () {
@@ -60,11 +61,12 @@ export default {
           index = i + 1
       }
       let map = { pm25: 'PM 2.5', pm10: 'PM 10'}
+
       return {
         text:  TEXT[index],
         class: CLASS[index],
-        particleText: map[this.particle],
-        fill: { color: COLORS[index] }
+        fill: { color: COLORS[index] },
+        particleText: map[this.particle]
       }
     }
   }

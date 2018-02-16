@@ -28,7 +28,14 @@ const mutations = {
       //data.state.reported.pm25 = 155
       //data.state.reported.pm10 = 85
 
+
       state.sensors[id] = data.state.reported
+
+      // Add latest to graph
+      //let histogram = state.histograms[id]
+      //histogram.date[histogram.date.length - 1] = + new Date()
+      //histogram.pm25[histogram.pm25.length - 1] = data.state.reported.v25
+      //histogram.pm10[histogram.pm10.length - 1] = data.state.reported.v10
     } catch (e) {
       console.log(e)
       return
