@@ -28,7 +28,6 @@ const mutations = {
       //data.state.reported.pm25 = 155
       //data.state.reported.pm10 = 85
 
-
       state.sensors[id] = data.state.reported
 
       // Add latest to graph
@@ -61,8 +60,8 @@ const mutations = {
       let tmp = buckets.map(bucket => {
         return {
           date: bucket.key,
-          pm25: bucket.v25.value,
-          pm10: bucket.v10.value
+          pm25: (bucket.v25.value == null) ? 0 : bucket.v25.value,
+          pm10: (bucket.v10.value == null) ? 0 : bucket.v10.value
         }
       })
       .reduce((a, b) => {
