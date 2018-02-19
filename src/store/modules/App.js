@@ -163,7 +163,7 @@ const actions = {
     return MIC.invoke('ObservationLambda', {
       action: 'FIND',
       query: {
-        size: 0,
+        size: 1,
         aggs: {
           hist: {
             date_histogram: {
@@ -179,7 +179,7 @@ const actions = {
             }
           }
         },
-        query: { filtered: { filter: { bool: { must: [
+        query: { bool: { filter: { bool: { must: [
           { term: { thingName } },
           { range: { timestamp: {
             gte: + new Date() - (1 * 24 * 60 * 60 * 1000), // 1 day

@@ -117,7 +117,7 @@ export default {
             ticks: {
               min: 0,
               max: this.max,
-              beginAtZero: true
+              autoSkip: false
             }
           }]
         },
