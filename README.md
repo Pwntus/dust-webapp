@@ -1,6 +1,7 @@
 # dust
 
 > Duster overalt.
+> - Fredrik H. Rasch
 
 ## Build Setup
 
