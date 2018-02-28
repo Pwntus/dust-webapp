@@ -82,7 +82,16 @@ export default {
         tooltips: {
           intersect: false,
           cornerRadius: 3,
-          displayColors: false
+          displayColors: false,
+          callbacks: {
+            label: (tooltipItem, data) => {
+              var label = tooltipItem.yLabel
+              if (parseFloat(label) <= 0.1)
+                label = 'No data'
+
+              return label
+            }
+          }
         },
         elements: {
           point: {

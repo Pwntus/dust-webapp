@@ -94,8 +94,8 @@ const mutations = {
         for (let i = 0; i < x.length; i++) {
 
           if (!tmp.date.includes(x[i])) {
-            final.pm25.push(0)
-            final.pm10.push(0)
+            final.pm25.push(0.1)
+            final.pm10.push(0.1)
           } else {
             final.pm25.push(tmp.pm25[ocount])
             final.pm10.push(tmp.pm10[ocount])
