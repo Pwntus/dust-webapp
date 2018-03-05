@@ -3,10 +3,14 @@
   md-card
     md-card-header
       md-card-header-text
-        .md-title {{ sensor.name }}
+        .md-title
+          | {{ sensor.name }}
+          .type
+            | {{ dataText }}
+            md-icon {{ dataIcon }}
         .md-subhead {{ when }}
     md-card-content
-      .md-layout
+      .md-layout(v-if="showData")
         .md-layout-item.md-size-80
           graph(
             :histogram="histogram"
@@ -27,18 +31,31 @@
             :value="sensor.v10"
             particle="pm10"
           )
+      .md-layout(v-if="!showData")
+        .md-layout-item.md-size-50
+          gauge-temp(
+            :value="sensor.temp"
+            :data-text="Temperature"
+          )
+        .md-layout-item.md-size-50
+          gauge-temp(
+            :value="sensor.hum"
+            :data-text="Humidity"
+          )
 </template>
 
 <script>
 import moment from 'moment'
 import Gauge from '@/components/Gauge'
+import GaugeTemp from '@/components/GaugeTemp'
 import Graph from '@/components/Graph'
 
 export default {
   name: 'Card',
-  props: ['sensor'],
+  props: ['sensor', 'showData'],
   components: {
     Gauge,
+    GaugeTemp,
     Graph
   },
   data: () => ({
@@ -52,6 +69,12 @@ export default {
         return { date: [], pm25: [], pm10: [] }
 
       return hist[this.sensor.id]
+    },
+    dataText () {
+      return this.showData ? 'Dust Particles' : 'Temperature & Humidity'
+    },
+    dataIcon () {
+      return this.showData ? 'blur_on' : 'hot_tub'
     }
   },
   mounted () {
@@ -74,6 +97,20 @@ export default {
     
     .md-title {
       margin-top: 0 !important;
+    }
+
+    .type {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 28px;
+      color: rgba(0,0,0,.7);
+      float: right;
+
+      .md-icon {
+        margin-left: 10px;
+        font-size: 18px;
+        float: right;
+      }
     }
   }
 
