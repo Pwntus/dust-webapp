@@ -6,13 +6,14 @@
     .right
       a(href="https://startiot.telenor.com/" target="_blank")
         img(src="../assets/img/startiot-logo.png")
-      a(href="http://airbit.uit.no/" target="_blank")
+      //a(href="http://airbit.uit.no/" target="_blank")
         img.airbit(src="../assets/img/airbit-logo.png")
     .c
   .md-layout.md-alignment-center
     card(
       v-for="(sensor, index) in sensors"
       :sensor="sensor"
+      :show-data="showData"
       :key="index"
     )
 </template>
@@ -27,10 +28,25 @@ export default {
     Reloader,
     Card
   },
+  data: () => ({
+    timeout: null,
+    showData: false
+  }),
   computed: {
     sensors () {
       return this.$store.getters['App/sensors']
     }
+  },
+  methods: {
+    toggleData () {
+      this.showData = this.showData ? false : true
+    }
+  },
+  mounted () {
+    this.timeout = setInterval(this.toggleData, 15 * 1000)
+  },
+  beforeDestroy () {
+    clearInterval(this.toggleData)
   }
 }
 </script>
