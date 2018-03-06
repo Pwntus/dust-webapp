@@ -10,7 +10,7 @@
             md-icon {{ dataIcon }}
         .md-subhead {{ when }}
     md-card-content
-      .md-layout(v-if="showData")
+      .md-layout(:class="dataClass")
         .md-layout-item.md-size-80
           graph(
             :histogram="histogram"
@@ -31,17 +31,34 @@
             :value="sensor.v10"
             particle="pm10"
           )
-      .md-layout(v-if="!showData")
-        .md-layout-item.md-size-50
-          gauge-temp(
-            :value="sensor.temp"
-            :data-text="Temperature"
-          )
-        .md-layout-item.md-size-50
-          gauge-temp(
-            :value="sensor.hum"
-            :data-text="Humidity"
-          )
+      .md-layout.margin
+        .md-layout(v-if="sensor.tmp !== null && sensor.hum !== null")
+          .md-layout-item.md-size-80
+            graph-temp(
+              :histogram="histogram"
+              type="tmp"
+            )
+          .md-layout-item.md-size-20.md-alignment-center-center
+            gauge-temp(
+              :value="sensor.tmp"
+              data-text="Temperature"
+            )
+          .md-layout-item.md-size-80
+            graph-temp(
+              :histogram="histogram"
+              type="hum"
+            )
+          .md-layout-item.md-size-20.md-alignment-center-center
+            gauge-temp(
+              :value="sensor.hum"
+              data-text="Humidity"
+            )
+        md-empty-state(
+          v-if="sensor.tmp == null && sensor.hum == null"
+          md-icon="visibility_off"
+          md-label="No Data"
+          md-description="This device is not configured to send this type of data"
+        )
 </template>
 
 <script>
@@ -49,6 +66,7 @@ import moment from 'moment'
 import Gauge from '@/components/Gauge'
 import GaugeTemp from '@/components/GaugeTemp'
 import Graph from '@/components/Graph'
+import GraphTemp from '@/components/GraphTemp'
 
 export default {
   name: 'Card',
@@ -56,7 +74,8 @@ export default {
   components: {
     Gauge,
     GaugeTemp,
-    Graph
+    Graph,
+    GraphTemp
   },
   data: () => ({
     when: 'never',
@@ -74,7 +93,10 @@ export default {
       return this.showData ? 'Dust Particles' : 'Temperature & Humidity'
     },
     dataIcon () {
-      return this.showData ? 'blur_on' : 'hot_tub'
+      return this.showData ? 'blur_on' : 'ac_unit'
+    },
+    dataClass () {
+      return this.showData ? '' : 'hidden'
     }
   },
   mounted () {
@@ -94,6 +116,7 @@ export default {
 
   .md-card-header {
     padding-bottom: 0;
+    background: #FFF;
     
     .md-title {
       margin-top: 0 !important;
@@ -115,10 +138,27 @@ export default {
   }
 
   .md-card-content {
+    height: 385px;
+    overflow: hidden;
     padding: 0 10px 10px !important;
 
+
     .md-layout {
+      margin-top: 0;
       align-items: center;
+
+      -webkit-transition: all .5s ease-in-out;
+      -moz-transition: all .5s ease-in-out;
+      -o-transition: all .5s ease-in-out;
+      transition: all .5s ease-in-out;
+
+      &.hidden {
+        margin-top: -380px;
+      }
+
+      &.margin {
+        margin-top: 10px;
+      }
     }
   }
 }

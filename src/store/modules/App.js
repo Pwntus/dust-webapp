@@ -61,18 +61,24 @@ const mutations = {
         return {
           date: bucket.key,
           pm25: (bucket.v25.value == null) ? 0 : bucket.v25.value,
-          pm10: (bucket.v10.value == null) ? 0 : bucket.v10.value
+          pm10: (bucket.v10.value == null) ? 0 : bucket.v10.value,
+          tmp:  (bucket.tmp.value == null) ? 0 : bucket.tmp.value,
+          hum:  (bucket.hum.value == null) ? 0 : bucket.hum.value
         }
       })
       .reduce((a, b) => {
         a.date.push(b.date)
         a.pm25.push(b.pm25)
         a.pm10.push(b.pm10)
+        a.tmp.push(b.tmp)
+        a.hum.push(b.hum)
         return a
       }, {
         date: [],
         pm25: [],
-        pm10: []
+        pm10: [],
+        tmp:  [],
+        hum:  []
       })
 
       // We have data
@@ -88,7 +94,9 @@ const mutations = {
         let final = {
           date: x,
           pm25: [],
-          pm10: []
+          pm10: [],
+          tmp:  [],
+          hum:  []
         }
         let ocount = 0
         for (let i = 0; i < x.length; i++) {
@@ -96,9 +104,13 @@ const mutations = {
           if (!tmp.date.includes(x[i])) {
             final.pm25.push(0.1)
             final.pm10.push(0.1)
+            final.tmp.push(0.1)
+            final.hum.push(0.1)
           } else {
             final.pm25.push(tmp.pm25[ocount])
             final.pm10.push(tmp.pm10[ocount])
+            final.tmp.push(tmp.tmp[ocount])
+            final.hum.push(tmp.hum[ocount])
             ocount++
           }
         }
@@ -175,7 +187,9 @@ const actions = {
             },
             aggs: {
               v10: { avg: { field: 'state.v10' } },
-              v25: { avg: { field: 'state.v25' } }
+              v25: { avg: { field: 'state.v25' } },
+              tmp: { avg: { field: 'state.tmp' } },
+              hum: { avg: { field: 'state.hum' } }
             }
           }
         },
@@ -188,7 +202,9 @@ const actions = {
         ],
         should: [
           { exists: { field: 'state.v10' } },
-          { exists: { field: 'state.v25' } }
+          { exists: { field: 'state.v25' } },
+          { exists: { field: 'state.tmp' } },
+          { exists: { field: 'state.hum' } }
         ] } } } }
       }
     })
