@@ -22,10 +22,9 @@ import VueCircle from 'vue2-circle-progress'
 
 export default {
   name: 'GaugeTemp',
-  props: ['value', 'dataText'],
+  props: ['value', 'dataText', 'max'],
   components: { VueCircle },
   data: () => ({
-    max: 50,
     fill: {
       color: '#00abec'
     }

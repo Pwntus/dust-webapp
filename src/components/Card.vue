@@ -42,6 +42,7 @@
           .md-layout-item.md-size-20.md-alignment-center-center
             gauge-temp(
               :value="sensor.tmp"
+              :max="50"
               data-text="Temperature"
             )
           .md-layout-item.md-size-80
@@ -53,6 +54,7 @@
           .md-layout-item.md-size-20.md-alignment-center-center
             gauge-temp(
               :value="sensor.hum"
+              :max="100"
               data-text="Humidity"
             )
         md-empty-state(
