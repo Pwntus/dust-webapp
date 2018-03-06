@@ -37,6 +37,7 @@
             graph-temp(
               :histogram="histogram"
               type="tmp"
+              :max="50"
             )
           .md-layout-item.md-size-20.md-alignment-center-center
             gauge-temp(
@@ -47,6 +48,7 @@
             graph-temp(
               :histogram="histogram"
               type="hum"
+              :max="100"
             )
           .md-layout-item.md-size-20.md-alignment-center-center
             gauge-temp(

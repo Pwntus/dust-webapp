@@ -13,7 +13,7 @@ import moment from 'moment'
 
 export default {
   name: 'GraphTemp',
-  props: ['histogram', 'type'],
+  props: ['histogram', 'type', 'max'],
   components: { Histogram },
   computed: {
     data () {
@@ -77,6 +77,7 @@ export default {
             },
             ticks: {
               min: 0,
+              max: this.max,
               autoSkip: false
             }
           }]
