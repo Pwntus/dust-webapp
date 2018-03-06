@@ -14,7 +14,7 @@
     p
       | {{ dataText }}
       br
-      span {{ value.toFixed(1) }}
+      span {{ value }}
 </template>
 
 <script>
@@ -27,14 +27,14 @@ export default {
   data: () => ({
     max: 50,
     fill: {
-      color: blue
+      color: '#00abec'
     }
   }),
   watch: {
     value: {
       handler (newValue, oldValue) {
         this.$refs.roundGauge.updateProgress(this.valuePc)
-        this.$refs.roundGauge.updateFill(this.data.fill.color)
+        this.$refs.roundGauge.updateFill(this.fill.color)
       }
     }
   },
