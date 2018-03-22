@@ -1,7 +1,12 @@
-# dust
+# Dust
 
 > Duster overalt.
-> - Fredrik H. Rasch
+> \- Fredrik H. Rasch
+
+![Example Screenshot](static/demo.png?raw=true "Example")
+
+## Watch it live!
+[http://startiot.cs.uit.no/dust/](http://startiot.cs.uit.no/dust/)
 
 ## Build Setup
 
