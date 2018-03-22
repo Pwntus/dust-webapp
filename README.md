@@ -1,5 +1,3 @@
-# Dust
-
 > Duster overalt.
 >
 > \- Fredrik H. Rasch
