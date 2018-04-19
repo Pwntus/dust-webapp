@@ -93,6 +93,10 @@ export default {
             }
           }
         },
+        animation: {
+          duration: 0,
+          easing: 'linear'
+        },
         elements: {
           point: {
             radius: 0,

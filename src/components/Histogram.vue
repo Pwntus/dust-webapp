@@ -6,7 +6,7 @@ import 'chartjs-plugin-annotation'
 export default {
   extends: Line,
   mixins: [reactiveProp],
-  props: ['options', 'chartData'],
+  props: ['chartData', 'options'],
   watch: {
     options: {
       handler (newOption, oldOption) {

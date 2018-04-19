@@ -30,7 +30,7 @@ export default {
   },
   data: () => ({
     timeout: null,
-    showData: false
+    showData: true
   }),
   computed: {
     sensors () {
@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted () {
-    this.timeout = setInterval(this.toggleData, 15 * 1000)
+    //this.timeout = setInterval(this.toggleData, 15 * 1000)
   },
   beforeDestroy () {
     clearInterval(this.toggleData)
