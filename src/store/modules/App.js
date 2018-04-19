@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import SWorker from 'simple-web-worker'
 import * as t from '@/store/types'
 import { MIC } from '@/lib/MIC'
 import { MQTT } from '@/lib/MQTT'
@@ -8,56 +9,13 @@ import {
   SENSORS
 } from '@/config'
 
-const state = {
-  auth: false,
-  sensors: {},
-  names: {},
-  histograms: {},
-  queue: []
-}
+let worker = SWorker.create([{
+  message: 'set_histogram',
+  func: buckets => {
+    let tmp = null
 
-const mutations = {
-  [t.APP_SET_AUTH] (state, value) {
-    state.auth = value
-  },
-  [t.APP_SET_DATA] (state, {topic, data}) {
     try {
-      const id = topic.slice(-8)
-
-      // Debug
-      //data.state.reported.pm25 = 155
-      //data.state.reported.pm10 = 85
-
-      state.sensors[id] = data.state.reported
-
-      // Add latest to graph
-      //let histogram = state.histograms[id]
-      //histogram.date[histogram.date.length - 1] = + new Date()
-      //histogram.pm25[histogram.pm25.length - 1] = data.state.reported.v25
-      //histogram.pm10[histogram.pm10.length - 1] = data.state.reported.v10
-    } catch (e) {
-      console.log(e)
-      return
-    }
-
-    const copy = state.sensors
-    state.sensors = Object.assign({}, copy)
-  },
-  [t.APP_SET_NAMES] (state, sensors) {
-    try {
-      state.names = sensors.map(sensor => {
-        return { [sensor['_id']]: sensor['_source'].label }
-      })
-      .reduce((a, b) => {
-        return Object.assign(a, b)
-      }, {})
-    } catch (e) {
-      console.log(e)
-    }
-  },
-  [t.APP_SET_HISTOGRAM] (state, {thingName, buckets}) {
-    try {
-      let tmp = buckets.map(bucket => {
+      tmp = buckets.map(bucket => {
         return {
           date: bucket.key,
           pm25: (bucket.v25.value == null) ? 0 : bucket.v25.value,
@@ -118,13 +76,66 @@ const mutations = {
         tmp = final
       }
 
-      // Copy for reactivity
-      let copy = Object.assign({}, state.histograms)
-      copy[thingName] = tmp
-      state.histograms = copy
+      return tmp
+
     } catch (e) {
       console.log(e)
     }
+  }
+}])
+
+const state = {
+  auth: false,
+  sensors: {},
+  names: {},
+  histograms: {},
+  queue: []
+}
+
+const mutations = {
+  [t.APP_SET_AUTH] (state, value) {
+    state.auth = value
+  },
+  [t.APP_SET_DATA] (state, {topic, data}) {
+    try {
+      const id = topic.slice(-8)
+
+      // Debug
+      //data.state.reported.pm25 = 155
+      //data.state.reported.pm10 = 85
+
+      state.sensors[id] = data.state.reported
+
+      // Add latest to graph
+      //let histogram = state.histograms[id]
+      //histogram.date[histogram.date.length - 1] = + new Date()
+      //histogram.pm25[histogram.pm25.length - 1] = data.state.reported.v25
+      //histogram.pm10[histogram.pm10.length - 1] = data.state.reported.v10
+    } catch (e) {
+      console.log(e)
+      return
+    }
+
+    const copy = state.sensors
+    state.sensors = Object.assign({}, copy)
+  },
+  [t.APP_SET_NAMES] (state, sensors) {
+    try {
+      state.names = sensors.map(sensor => {
+        return { [sensor['_id']]: sensor['_source'].label }
+      })
+      .reduce((a, b) => {
+        return Object.assign(a, b)
+      }, {})
+    } catch (e) {
+      console.log(e)
+    }
+  },
+  [t.APP_SET_HISTOGRAM] (state, {thingName, res}) {
+    // Copy for reactivity
+    let copy = Object.assign({}, state.histograms)
+    copy[thingName] = res
+    state.histograms = copy
   }
 }
 
@@ -210,8 +221,12 @@ const actions = {
     })
     .then(r => { return r.aggregations.hist.buckets })
     .then(buckets => {
-      commit(t.APP_SET_HISTOGRAM, { thingName, buckets })
-      return Promise.resolve()
+      // Issue compute heavy task to web-worker
+      return worker.postMessage('set_histogram', [buckets])
+        .then(res => {
+          commit(t.APP_SET_HISTOGRAM, { thingName, res })
+          return Promise.resolve()
+        })
     })
     .catch(e => {
       console.log(e)
