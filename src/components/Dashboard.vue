@@ -2,7 +2,7 @@
 #dashboard
   reloader
   span.md-display-3
-    | Dust Levels at IFI
+    | Environment at IFI
     .right
       a(href="https://startiot.telenor.com/" target="_blank")
         img(src="../assets/img/startiot-logo.png")
@@ -17,7 +17,12 @@
       :key="index"
     )
     bus-card(
-      from="UiT (Tromsø)"
+      from="19021323:2"
+      title="UiT South"
+    )
+    bus-card(
+      from="19021323:1"
+      title="UiT North"
     )
 </template>
 

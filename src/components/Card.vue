@@ -145,8 +145,7 @@ export default {
     height: 385px;
     overflow: hidden;
     padding: 0 10px 10px !important;
-
-
+    
     .md-layout {
       margin-top: 0;
       align-items: center;
