@@ -36,17 +36,16 @@ export default {
   }),
   computed: {
     endpoint () {
-      return `http://startiot.cs.uit.no:3003/${this.from}`
+      return `http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/v1DepartureSearchXML?from=${encodeURIComponent(this.from)}&realtime=1`
     }
   },
   methods: {
     poll () {
-      fetch(this.endpoint)
+      fetch(this.endpoint, { mode: "no-cors" })
         .then(res => {
-          for (var key of res.headers.keys())
-            console.log(key)
-          for (var key of res.headers.values())
-            console.log(key)
+          for (var key of res.headers.keys()) {
+            console.log(key + ":", res.headers.get(k));
+          }
           return res.text()
         })
         .then(res => {
@@ -59,11 +58,11 @@ export default {
             .slice(0, 8)
 
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
         })
         .catch(err => {
-          console.log(err)
+          console.error("fetch() failed:", this.endpoint, err)
         })
     },
     update_moment () {
@@ -99,7 +98,7 @@ export default {
     .md-card-header {
       padding-bottom: 0;
       background: #FFF;
-      
+
       .md-title {
         margin-top: 0 !important;
       }
