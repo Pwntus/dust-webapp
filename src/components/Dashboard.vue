@@ -16,17 +16,22 @@
       :show-data="showData"
       :key="index"
     )
+    bus-card(
+      from="UiT (Tromsø)"
+    )
 </template>
 
 <script>
 import Reloader from '@/components/Reloader'
 import Card from '@/components/Card'
+import BusCard from '@/components/BusCard'
 
 export default {
   name: 'Dashboard',
   components: {
     Reloader,
-    Card
+    Card,
+    BusCard
   },
   data: () => ({
     timeout: null,
