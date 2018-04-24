@@ -14,17 +14,22 @@
         md-list-item(
           v-for="(bus, index) in filtered"
           :key="index"
+          :class="{ gone : has_gone(bus) }"
         )
           md-avatar.md-avatar-icon.md-primary {{ bus.l }}
           .md-list-item-text
-            span {{ bus.nd }}
+            span
+              | {{ bus.nd }}
+              b {{ bus.late }}
           .md-list-action
-            span {{ bus.a2moment }}
+            span {{ bus.live_moment }}
 </template>
 
 <script>
 import moment from 'moment'
 import parse from 'xml-parser'
+
+const TRAVEL_MAGIC_DATE_FORMAT = 'DD.MM.YYYY HH:mm:ss'
 
 export default {
   name: 'BusCard',
@@ -32,29 +37,77 @@ export default {
   data: () => ({
     timeout: null,
     timeout_countdown: null,
+    diff: 0,
     filtered: []
   }),
   computed: {
     endpoint () {
       return `http://startiot.cs.uit.no:3003/${this.from}`
+    },
+    now () {
+      return moment().add(this.diff)
     }
   },
   methods: {
+    get_live_moment (bus) {
+      if (bus.hasOwnProperty('a2'))
+        return bus.a2.from(this.now)
+      else if (bus.hasOwnProperty('a'))
+        return bus.a.format('HH:mm')
+      else if (bus.hasOwnProperty('d2'))
+        return bus.d2.from(this.now)
+      else if (bus.hasOwnProperty('d'))
+        return bus.d.format('HH:mm')
+      else
+        return 'No info'
+    },
+    get_late (bus) {
+      let diff = 0
+
+      if (bus.hasOwnProperty('a2') && bus.hasOwnProperty('a'))
+        diff = moment.duration(bus.a2.diff(bus.a)).asMinutes()
+      else if (bus.hasOwnProperty('d2') && bus.hasOwnProperty('d'))
+        diff = moment.duration(bus.d2.diff(bus.d)).asMinutes()
+
+      return diff > 1 ? `${Math.round(diff)}'` : null
+    },
+    has_gone (bus) {
+      if (bus.hasOwnProperty('a2') && bus.hasOwnProperty('a'))
+        return this.now.diff(bus.a2) > 0
+      else if (bus.hasOwnProperty('d2') && bus.hasOwnProperty('d'))
+        return this.now.diff(bus.d2) > 0
+      else
+        return false
+    },
     poll () {
       fetch(this.endpoint)
         .then(res => {
-          for (var key of res.headers.keys())
-            console.log(key)
-          for (var key of res.headers.values())
-            console.log(key)
+          let proxy = moment(res.headers.get('Date'))
+          this.diff = moment().diff(proxy)
+
           return res.text()
         })
         .then(res => {
           try {
             let raw = parse(res)
             this.filtered = raw.root.children[0].children.map(item => {
-              item.attributes.a2moment = null
-              return {...item.attributes}
+              let bus = item.attributes
+
+              // Convert properties to moments
+              if (bus.hasOwnProperty('a'))
+                bus.a = moment(bus.a, TRAVEL_MAGIC_DATE_FORMAT)
+              if (bus.hasOwnProperty('a2'))
+                bus.a2 = moment(bus.a2, TRAVEL_MAGIC_DATE_FORMAT)
+              if (bus.hasOwnProperty('d'))
+                bus.d = moment(bus.d, TRAVEL_MAGIC_DATE_FORMAT)
+              if (bus.hasOwnProperty('d2'))
+                bus.d2 = moment(bus.d2, TRAVEL_MAGIC_DATE_FORMAT)
+
+              // Add own properties
+              bus.live_moment = this.get_live_moment(bus)
+              bus.late = this.get_late(bus)
+
+              return {...bus}
             })
             .slice(0, 8)
 
@@ -68,8 +121,7 @@ export default {
     },
     update_moment () {
       this.filtered = this.filtered.map(bus => {
-        let a = bus.hasOwnProperty('a2') ? bus.a2 : bus.a
-        bus.a2moment = moment(a, 'DD.MM.YYYY HH:mm:ss').fromNow()
+        bus.live_moment = this.get_live_moment(bus)
 
         return bus
       })
@@ -93,6 +145,10 @@ export default {
 
 <style lang="scss">
 .bus-card {
+  .gone {
+    opacity: .5;
+  }
+
   .md-card {
     overflow: hidden;
 
@@ -132,6 +188,13 @@ export default {
 
           .md-list-item-text span {
             font-size: 16px;
+
+            b {
+              padding-left: 10px;
+              color: #ff504a;
+              font-size: 16px;
+              font-weight: normal;
+            }
           }
 
           .md-avatar {
