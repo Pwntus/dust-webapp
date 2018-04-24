@@ -18,11 +18,11 @@
     )
     bus-card(
       from="19021323:2"
-      title="UiT South"
+      title="UiT Southbound"
     )
     bus-card(
       from="19021323:1"
-      title="UiT North"
+      title="UiT Northbound"
     )
 </template>
 
