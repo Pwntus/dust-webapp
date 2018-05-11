@@ -1,3 +1,4 @@
 module.exports = {
-  compiler: true
+  compiler: true,
+  baseUrl: '/dust'
 }
