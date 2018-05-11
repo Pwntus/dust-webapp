@@ -44,9 +44,9 @@ let worker = SWorker.create([{
 
         let x = []
         let latest = tmp.date[tmp.date.length - 1]
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < 48; i++) {
           x.unshift(latest)
-          latest -= 60 * 60 * 1000
+          latest -= 15 * 60 * 1000
         }
 
         let final = {
@@ -191,7 +191,7 @@ const actions = {
           hist: {
             date_histogram: {
               field: 'timestamp',
-              interval: '1h',
+              interval: '15m',
               time_zone: '+01:00',
               min_doc_count: 1,
               extended_bounds: {}
@@ -207,7 +207,7 @@ const actions = {
         query: { bool: { filter: { bool: { must: [
           { term: { thingName } },
           { range: { timestamp: {
-            gte: + new Date() - (1 * 24 * 60 * 60 * 1000), // 1 day
+            gte: + new Date() - (12 * 60 * 60 * 1000), // 12 hours
             lte: + new Date()
             } } }
         ],
