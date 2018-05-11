@@ -64,8 +64,8 @@ export default {
     }
   },
   mounted () {
-    this.username = 'Dust'
-    this.password = 'Dust1234'
+    this.username = ''
+    this.password = ''
     this.login()
   }
 }
