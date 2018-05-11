@@ -18,7 +18,7 @@ export default {
   computed: {
     data () {
       return {
-        labels: this.histogram.date.map(d => moment(d).format('h A')),
+        labels: this.histogram.date.map(d => moment(d).format('HH:mm')),
         datasets: [{
           data: this.histogram[this.type].map(v => v.toFixed(2)),
           backgroundColor: '#00abec',
