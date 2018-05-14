@@ -44,7 +44,7 @@ let worker = SWorker.create([{
 
         let x = []
         let latest = tmp.date[tmp.date.length - 1]
-        for (let i = 0; i < 48; i++) {
+        for (let i = 0; i < 96; i++) { // Number of intervals to traverse
           x.unshift(latest)
           latest -= 15 * 60 * 1000
         }
@@ -207,7 +207,7 @@ const actions = {
         query: { bool: { filter: { bool: { must: [
           { term: { thingName } },
           { range: { timestamp: {
-            gte: + new Date() - (12 * 60 * 60 * 1000), // 12 hours
+            gte: + new Date() - (24 * 60 * 60 * 1000), // 24 hours
             lte: + new Date()
             } } }
         ],
