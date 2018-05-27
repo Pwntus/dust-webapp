@@ -88,8 +88,7 @@ const state = {
   auth: false,
   sensors: {},
   names: {},
-  histograms: {},
-  queue: []
+  histograms: {}
 }
 
 const mutations = {
@@ -182,11 +181,25 @@ const actions = {
       console.log(e)
     })
   },
-  getHistogram ({commit}, thingName) {
+  getHistogram ({state, commit}, thingName = null) {
+    // Fetch for all sensors
+    if (thingName == null) {
+      thingName = []
+      for (let key in state.sensors)
+        thingName.push(key)
+
+      if (thingName.length <= 0)
+        return
+    }
+
+    // Format correct terms-clause in ES query
+    if (thingName.constructor !== Array)
+      thingName = [thingName]
+
     return MIC.invoke('ObservationLambda', {
       action: 'FIND',
       query: {
-        size: 1,
+        size: 0,
         aggs: {
           hist: {
             date_histogram: {
@@ -205,7 +218,7 @@ const actions = {
           }
         },
         query: { bool: { filter: { bool: { must: [
-          { term: { thingName } },
+          { terms: { thingName: thingName } },
           { range: { timestamp: {
             gte: + new Date() - (24 * 60 * 60 * 1000), // 24 hours
             lte: + new Date()

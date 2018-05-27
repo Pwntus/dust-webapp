@@ -103,7 +103,14 @@ export default {
       return this.showData ? '' : 'hidden'
     }
   },
-  mounted () {
+  async mounted () {
+    // Fetch histogram on mount
+    try {
+      await this.$store.dispatch('App/getHistogram', this.sensor.id)
+    } catch (e) {
+      console.log(e)
+    }
+
     this.timeout = setInterval(() => {
       this.when = moment(this.sensor.timestamp).fromNow()
     }, 10000)

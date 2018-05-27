@@ -9,14 +9,11 @@ export default {
     timeout: null
   }),
   computed: {
-    names () { return this.$store.getters['App/names'] }
-  },
-  watch: {
-    names: function () { this.proc() }
+    sensors () { return this.$store.getters['App/sensors'] }
   },
   created () {
     this.proc = async () => {
-      for (let thing in this.names) {
+      for (let thing in this.sensors) {
         try {
           await this.$store.dispatch('App/getHistogram', thing)
         } catch (e) {
