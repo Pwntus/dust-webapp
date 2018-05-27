@@ -1,5 +1,5 @@
 <template lang="pug">
-.graph
+.graph(:class="{ visible: data.labels.length > 0 }")
   histogram(
     :chart-data="data"
     :options="options"
@@ -169,6 +169,17 @@ export default {
 .graph {
   width: 100%;
   position: relative;
+  opacity: 0;
+
+  -webkit-transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -ms-transition: opacity 1s ease-in-out;
+  -o-transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out;
+
+  &.visible {
+    opacity: 1;
+  }
 
   canvas {
     height: 190px !important;
