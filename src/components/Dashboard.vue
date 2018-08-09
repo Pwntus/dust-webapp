@@ -24,19 +24,25 @@
       from="19021323:1"
       title="UiT Northbound"
     )
+    airport-card(
+      center="69.67,18.95"
+      :zoom="9"
+    )
 </template>
 
 <script>
 import Reloader from '@/components/Reloader'
 import Card from '@/components/Card'
 import BusCard from '@/components/BusCard'
+import AirportCard from '@/components/AirportCard'
 
 export default {
   name: 'Dashboard',
   components: {
     Reloader,
     Card,
-    BusCard
+    BusCard,
+    AirportCard
   },
   data: () => ({
     timeout: null,
