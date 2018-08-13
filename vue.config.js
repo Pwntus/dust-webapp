@@ -1,4 +1,5 @@
+/* eslint-disable */
 module.exports = {
-  compiler: true,
+  runtimeCompiler: true,
   baseUrl: '/dust'
 }

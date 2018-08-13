@@ -9,5 +9,6 @@ export default new Vuex.Store({
   modules: {
     App
   },
+  // eslint-disable-next-line
   strict: process.env.NODE_ENV !== 'production'
 })

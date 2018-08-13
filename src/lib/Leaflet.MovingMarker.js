@@ -1,3 +1,4 @@
+/* eslint-disable */
 L.interpolatePosition = function(p1, p2, duration, t) {
     var k = t/duration;
     k = (k > 0) ? k : 0;

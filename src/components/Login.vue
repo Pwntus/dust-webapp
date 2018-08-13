@@ -58,7 +58,7 @@ export default {
         
       this.loading = true
       this.$store.dispatch('App/auth', this.payload)
-        .catch(error => {
+        .catch(() => {
           this.loading = false
         })
     }
@@ -71,15 +71,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.md-layout {
-  padding: 0 20px 20px 0;
+<style lang="stylus" scoped>
+.md-layout
+  padding 0 20px 20px 0
 
-  .md-progress-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -50px 0 0 -50px;
-  }
-}
+  .md-progress-spinner
+    position absolute
+    top 50%
+    left 50%
+    margin -50px 0 0 -50px
 </style>

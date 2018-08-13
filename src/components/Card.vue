@@ -108,7 +108,7 @@ export default {
     try {
       await this.$store.dispatch('App/getHistogram', this.sensor.id)
     } catch (e) {
-      console.log(e)
+      return
     }
 
     this.timeout = setInterval(() => {
@@ -121,55 +121,46 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.md-card {
-  overflow: hidden;
+<style lang="stylus" scoped>
+.md-card
+  overflow hidden
 
-  .md-card-header {
-    padding-bottom: 0;
-    background: #FFF;
+  .md-card-header
+    padding-bottom 0
+    background #FFF
     
-    .md-title {
-      margin-top: 0 !important;
-    }
+    .md-title
+      margin-top 0 !important
 
-    .type {
-      font-size: 12px;
-      font-weight: 500;
-      line-height: 28px;
-      color: rgba(0,0,0,.7);
-      float: right;
+    .type
+      font-size 12px
+      font-weight 500
+      line-height 28px
+      color rgba(0, 0, 0, .7)
+      float right
 
-      .md-icon {
-        margin-left: 10px;
-        font-size: 18px;
-        float: right;
-      }
-    }
-  }
+      .md-icon
+        margin-left 10px
+        font-size 18px
+        float right
 
-  .md-card-content {
-    height: 385px;
-    overflow: hidden;
-    padding: 0 10px 10px !important;
+  .md-card-content
+    height 385px
+    overflow hidden
+    padding 0 10px 10px !important
     
-    .md-layout {
-      margin-top: 0;
-      align-items: center;
+    .md-layout
+      margin-top 0
+      align-items center
 
-      -webkit-transition: all .5s ease-in-out;
-      -moz-transition: all .5s ease-in-out;
-      -o-transition: all .5s ease-in-out;
-      transition: all .5s ease-in-out;
+      -webkit-transition all .5s ease-in-out
+      -moz-transition all .5s ease-in-out
+      -o-transition all .5s ease-in-out
+      transition all .5s ease-in-out
 
-      &.hidden {
-        margin-top: -380px;
-      }
+      &.hidden
+        margin-top -380px
 
-      &.margin {
-        margin-top: 10px;
-      }
-    }
-  }
-}
+      &.margin
+        margin-top 10px
 </style>

@@ -14,6 +14,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import 'leaflet'
 import 'leaflet-defaulticon-compatibility'
 import 'leaflet-geometryutil'
@@ -75,7 +76,7 @@ export default {
 
         this.updateMap()
       } catch (e) {
-        console.log(e)
+        return
       }
     },
     updateMap () {
@@ -214,61 +215,51 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.airport-card {
-  .md-card {
-    overflow: hidden;
+<style lang="stylus">
+.airport-card
+  .md-card
+    overflow hidden
 
-    .md-card-header {
-      padding-bottom: 0;
-      background: #FFF;
+    .md-card-header
+      padding-bottom 0
+      background #FFF
       
-      .md-title {
-        margin-top: 0 !important;
-      }
+      .md-title
+        margin-top 0 !important
 
-      .type {
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 28px;
-        color: rgba(0,0,0,.7);
-        float: right;
+      .type
+        font-size 12px
+        font-weight 500
+        line-height 28px
+        color rgba(0,0,0,.7)
+        float right
 
-        .md-icon {
-          margin-left: 10px;
-          font-size: 18px;
-          float: right;
-        }
-      }
-    }
+        .md-icon
+          margin-left 10px
+          font-size 18px
+          float right
 
-    .md-card-content {
-      height: 385px;
-      overflow: hidden;
-      padding: 16px 0 0;
+    .md-card-content
+      height 385px
+      overflow hidden
+      padding 16px 0 0
 
-      #map {
-        height: 100%;
+      #map
+        height 100%
 
         .leaflet-tooltip-top:before,
         .leaflet-tooltip-bottom:before,
         .leaflet-tooltip-left:before,
-        .leaflet-tooltip-right:before {
-          border: 0
-        }
+        .leaflet-tooltip-right:before
+          border 0
 
-        .tooltip {
-          box-shadow: none;
-          margin-top: 20px;
-          padding: 2px 4px 0;
-          border: 0;
-          font-family: monospace;
-          font-size: 9px;
-          background: rgba(0, 0, 0, .5);
-          color: #FFF;
-        }
-      }
-    }
-  }
-}
+        .tooltip
+          box-shadow none
+          margin-top 20px
+          padding 2px 4px 0
+          border 0
+          font-family monospace
+          font-size 9px
+          background rgba(0, 0, 0, .5)
+          color #FFF
 </style>

@@ -37,7 +37,7 @@ export default {
           cornerRadius: 3,
           displayColors: false,
           callbacks: {
-            label: (tooltipItem, data) => {
+            label: (tooltipItem) => {
               var label = tooltipItem.yLabel
               if (parseFloat(label) <= 0.1)
                 label = 'No data'
@@ -88,13 +88,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.graph-temp {
-  width: 100%;
-  position: relative;
+<style lang="stylus">
+.graph-temp
+  width 100%
+  position relative
 
-  canvas {
-    height: 180px !important;
-  }
-}
+  canvas
+    height 180px !important
 </style>

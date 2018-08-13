@@ -112,11 +112,11 @@ export default {
             .slice(0, 8)
 
           } catch (e) {
-            console.log(e)
+            return
           }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
+          return
         })
     },
     update_moment () {
@@ -143,71 +143,57 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.bus-card {
-  .gone {
-    opacity: .5;
-  }
+<style lang="stylus">
+.bus-card
+  .gone
+    opacity .5
 
-  .md-card {
-    overflow: hidden;
+  .md-card
+    overflow hidden
 
-    .md-card-header {
-      padding-bottom: 0;
-      background: #FFF;
+    .md-card-header
+      padding-bottom 0
+      background #FFF
       
-      .md-title {
-        margin-top: 0 !important;
-      }
+      .md-title
+        margin-top 0 !important
 
-      .type {
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 28px;
-        color: rgba(0,0,0,.7);
-        float: right;
+      .type
+        font-size 12px
+        font-weight 500
+        line-height 28px
+        color rgba(0, 0, 0, .7)
+        float right
 
-        .md-icon {
-          margin-left: 10px;
-          font-size: 18px;
-          float: right;
-        }
-      }
-    }
+        .md-icon
+          margin-left 10px
+          font-size 18px
+          float right
 
-    .md-card-content {
-      height: 385px;
-      overflow: hidden;
+    .md-card-content
+      height 385px
+      overflow hidden
 
-      .md-list-item {
-        margin-bottom: 3px;
+      .md-list-item
+        margin-bottom 3px
 
-        .md-list-item-content {
-          padding-left: 0;
-          font-size: 16px !important;
+        .md-list-item-content
+          padding-left 0
+          font-size 16px !important
 
-          .md-list-item-text span {
-            font-size: 16px;
+          .md-list-item-text span
+            font-size 16px
 
-            b {
-              padding-left: 10px;
-              color: #ff504a;
-              font-size: 16px;
-              font-weight: normal;
-            }
-          }
+            b
+              padding-left 10px
+              color #ff504a
+              font-size 16px
+              font-weight normal
 
-          .md-avatar {
-            border: 2px solid #1a5fd2;
-            font-size: 16px;
-          }
+          .md-avatar
+            border 2px solid #1a5fd2
+            font-size 16px
 
-          .md-list-action {
-            color: #dcb000;
-          }
-        }
-      }
-    }
-  }
-}
+          .md-list-action
+            color #dcb000
 </style>

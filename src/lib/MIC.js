@@ -15,7 +15,9 @@ class ManagedIotCloud {
   init () {
     if (this.manifest !== null) return Promise.resolve()
     return this.loadManifest()
-      .catch(error => console.log('Could not initialize MIC:', error))
+      .catch(error => {
+        throw new Error('Could not initialize MIC:', error)
+      })
   }
 
   /* Parse different formats returned by a Lambda call */

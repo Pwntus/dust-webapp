@@ -31,7 +31,7 @@ export default {
   }),
   watch: {
     value: {
-      handler (newValue, oldValue) {
+      handler () {
         this.$refs.roundGauge.updateProgress(this.valuePc)
         this.$refs.roundGauge.updateFill(this.fill.color)
       }
@@ -47,21 +47,17 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.gauge-temp {
-  width: 100%;
-  position: relative;
-  text-align: center;
-  font-size: 10px;
+<style lang="stylus">
+.gauge-temp
+  width 100%
+  position relative
+  text-align center
+  font-size 10px
 
-  .circle {
-    p {
-      line-height: 15px;
+  .circle
+    p
+      line-height 15px
 
-      span {
-        font-size: 15px;
-      }
-    }
-  }
-}
+      span
+        font-size 15px
 </style>

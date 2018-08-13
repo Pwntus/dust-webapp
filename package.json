@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "aws-mqtt-client": "0.0.5",
-    "aws-sdk": "^2.226.1",
+    "aws-sdk": "^2.253.1",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "chartjs-plugin-annotation": "^0.5.7",
@@ -16,27 +17,46 @@
     "leaflet-defaulticon-compatibility": "^0.1.1",
     "leaflet-geometryutil": "^0.9.0",
     "leaflet-rotatedmarker": "^0.2.0",
-    "moment": "^2.22.1",
+    "moment": "^2.22.2",
     "simple-web-worker": "^1.2.0",
     "vue": "^2.5.16",
-    "vue-chartjs": "^3.3.1",
+    "vue-chartjs": "^3.3.2",
     "vue-material": "^1.0.0-beta-8",
+    "vue-router": "^3.0.1",
     "vue2-circle-progress": "^1.2.3",
     "vuex": "^3.0.1",
     "xml-parser": "^1.2.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-beta.10",
-    "@vue/cli-service": "^3.0.0-beta.10",
+    "@vue/cli-plugin-babel": "^3.0.0-rc.3",
+    "@vue/cli-plugin-eslint": "^3.0.0-rc.3",
+    "@vue/cli-service": "^3.0.0-rc.3",
+    "@vue/eslint-config-standard": "^3.0.0-beta.10",
     "node-sass": "^4.7.2",
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
-    "sass-loader": "^6.0.6",
-    "vue-template-compiler": "^2.5.13"
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "vue-template-compiler": "^2.5.16"
   },
   "babel": {
     "presets": [
-      "@vue/app"
+      [
+        "@vue/app",
+        {
+          "useBuiltIns": "entry"
+        }
+      ]
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
     ]
   },
   "postcss": {

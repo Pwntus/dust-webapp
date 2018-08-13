@@ -84,7 +84,7 @@ export default {
           cornerRadius: 3,
           displayColors: false,
           callbacks: {
-            label: (tooltipItem, data) => {
+            label: (tooltipItem) => {
               var label = tooltipItem.yLabel
               if (parseFloat(label) <= 0.1)
                 label = 'No data'
@@ -165,24 +165,21 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.graph {
-  width: 100%;
-  position: relative;
-  opacity: 0;
+<style lang="stylus">
+.graph
+  width 100%
+  position relative
+  opacity 0
 
-  -webkit-transition: opacity 1s ease-in-out;
-  -moz-transition: opacity 1s ease-in-out;
-  -ms-transition: opacity 1s ease-in-out;
-  -o-transition: opacity 1s ease-in-out;
-  transition: opacity 1s ease-in-out;
+  -webkit-transition opacity 1s ease-in-out
+  -moz-transition opacity 1s ease-in-out
+  -ms-transition opacity 1s ease-in-out
+  -o-transition opacity 1s ease-in-out
+  transition opacity 1s ease-in-out
 
-  &.visible {
-    opacity: 1;
-  }
+  &.visible
+    opacity 1
 
-  canvas {
-    height: 190px !important;
-  }
-}
+  canvas
+    height 190px !important
 </style>

@@ -1,4 +1,7 @@
-<template></template>
+<template lang="pug">
+#reloader
+</template>
+
 <script>
 import { REFRESH_HIST } from '@/config'
 
@@ -17,7 +20,7 @@ export default {
         try {
           await this.$store.dispatch('App/getHistogram', thing)
         } catch (e) {
-          console.log(e)
+          return
         }
       }
     }

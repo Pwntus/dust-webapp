@@ -1,13 +1,8 @@
-import Vue from 'vue'
 import SWorker from 'simple-web-worker'
 import * as t from '@/store/types'
 import { MIC } from '@/lib/MIC'
 import { MQTT } from '@/lib/MQTT'
-import {
-  TOPIC,
-  THING_TYPE,
-  SENSORS
-} from '@/config'
+import { THING_TYPE } from '@/config'
 
 let worker = SWorker.create([{
   message: 'set_histogram',
@@ -79,7 +74,7 @@ let worker = SWorker.create([{
       return tmp
 
     } catch (e) {
-      console.log(e)
+      return null
     }
   }
 }])
@@ -111,7 +106,6 @@ const mutations = {
       //histogram.pm25[histogram.pm25.length - 1] = data.state.reported.v25
       //histogram.pm10[histogram.pm10.length - 1] = data.state.reported.v10
     } catch (e) {
-      console.log(e)
       return
     }
 
@@ -127,7 +121,7 @@ const mutations = {
         return Object.assign(a, b)
       }, {})
     } catch (e) {
-      console.log(e)
+      return
     }
   },
   [t.APP_SET_HISTOGRAM] (state, {thingName, res}) {
@@ -165,7 +159,7 @@ const actions = {
       return
     }
   },
-  getNames ({commit, dispatch}) {
+  getNames ({commit}) {
     MIC.invoke('ThingLambda', {
       action: 'FIND',
       query: {
@@ -177,8 +171,8 @@ const actions = {
     .then(sensors => {
       commit(t.APP_SET_NAMES, sensors)
     })
-    .catch(e => {
-      console.log(e)
+    .catch(() => {
+      return
     })
   },
   getHistogram ({state, commit}, thingName = null) {
@@ -242,7 +236,6 @@ const actions = {
         })
     })
     .catch(e => {
-      console.log(e)
       return Promise.reject(e)
     })
   }
@@ -269,7 +262,7 @@ const getters = {
           tmp[key].name = 'Unnamed'
       }
     } catch (e) {
-      console.log(e)
+      return []
     }
 
     return tmp

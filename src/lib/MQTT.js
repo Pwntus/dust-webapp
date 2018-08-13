@@ -33,8 +33,8 @@ class MqttClient {
         this.kill()
       }
     })
-    .catch(e => {
-      console.log(e);
+    .catch(() => {
+      return
     })
   }
 
@@ -56,9 +56,9 @@ class MqttClient {
       this.mqtt.unsubscribe(this.topic)
 
     this.topic = topic
-    this.mqtt.subscribe(topic, {qos: 1}, (err, granted) => {
+    this.mqtt.subscribe(topic, {qos: 1}, err => {
       if (err)
-        console.log(err)
+        return
       this.ctx.bus.$emit('mqtt:subscribe', topic)
     })
   }

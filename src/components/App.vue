@@ -25,9 +25,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#app {
-  height: 100%;
-  padding: 20px 0 0 20px;
-}
+<style lang="stylus">
+#app
+  height 100%
+  padding 20px 0 0 20px
 </style>

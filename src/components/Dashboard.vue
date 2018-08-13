@@ -67,35 +67,28 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-#dashboard {
-  .md-display-3 {
-    padding-bottom: 20px;
-    display: block;
+<style lang="stylus" scoped>
+#dashboard
+  .md-display-3
+    padding-bottom 20px
+    display block
 
-    .right {
-      padding-top: 23px;
-      float: right;
+    .right
+      padding-top 23px
+      float right
 
-      img {
-        height: 25px;
-        margin: 0 20px 0 20px;
-        border: 0;
-        float: right;
+      img
+        height 25px
+        margin 0 20px 0 20px
+        border 0
+        float right
 
-        &.airbit {
-          margin: 0 0 0 20px;
-        }
-      }
-    }
+        &.airbit
+          margin 0 0 0 20px
 
-    .c {
-      clear: both;
-    }
-  }
+    .c
+      clear both
 
-  .md-layout-item {
-    padding: 0 20px 20px 0;
-  }
-}
+  .md-layout-item
+    padding 0 20px 20px 0
 </style>
