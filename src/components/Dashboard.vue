@@ -79,6 +79,10 @@ export default {
     }
   },
   created () {
+    if (typeof this.$route.params.query === 'undefined') {
+      return
+    }
+
     try {
       this.config = JSON.parse(this.$route.params.query)
     } catch (e) {
