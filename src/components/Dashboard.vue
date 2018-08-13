@@ -1,7 +1,7 @@
 <template lang="pug">
 #dashboard
-  reloader
-  span.md-display-3
+  reloader(v-if="config === null")
+  span.md-display-3(v-if="config === null")
     | Environment at IFI
     .right
       a(href="https://startiot.telenor.com/" target="_blank")
