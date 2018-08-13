@@ -2,20 +2,18 @@
 #app
   listener
   login(v-if="!auth")
-  dashboard(v-if="auth")
+  router-view(v-if="auth")
 </template>
 
 <script>
 import Listener from '@/components/Listener'
 import Login from '@/components/Login'
-import Dashboard from '@/components/Dashboard'
 
 export default {
   name: 'App',
   components: {
     Listener,
-    Login,
-    Dashboard
+    Login
   },
   computed: {
     auth () {

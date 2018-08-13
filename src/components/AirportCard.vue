@@ -4,7 +4,7 @@
     md-card-header
       md-card-header-text
         .md-title
-          | Tromsø Airport, Langnes
+          | {{ title }}
           .type
             | Airspace
             md-icon airplanemode_active
@@ -38,7 +38,7 @@ const kts2ms = (kts, distance) => {
 
 export default {
   name: 'AirportCard',
-  props: ['center', 'zoom'],
+  props: ['title', 'center', 'zoom'],
   data: () => ({
     map: null,
     featureGroup: null,

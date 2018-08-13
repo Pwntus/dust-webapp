@@ -9,7 +9,7 @@
       //a(href="http://airbit.uit.no/" target="_blank")
         img.airbit(src="../assets/img/airbit-logo.png")
     .c
-  .md-layout.md-alignment-center
+  .md-layout.md-alignment-center(v-if="config === null")
     card(
       v-for="(sensor, index) in sensors"
       :sensor="sensor"
@@ -25,9 +25,28 @@
       title="UiT Northbound"
     )
     airport-card(
+      title="Tromsø Airport, Langnes"
       center="69.67,18.95"
       :zoom="9"
     )
+  .md-layout.md-alignment-center(v-if="config !== null")
+    template(
+      v-for="(item, index) in config"
+      :index="index"
+    )
+      //- Bus Card
+      template(v-if="item.name === 'bus-card'")
+        bus-card(
+          :title="item.title"
+          :from="item.from"
+        )
+      //- Airport Card
+      template(v-if="item.name === 'airport-card'")
+        airport-card(
+          :title="item.title"
+          :center="item.center"
+          :zoom="item.zoom"
+        )
 </template>
 
 <script>
@@ -46,7 +65,8 @@ export default {
   },
   data: () => ({
     timeout: null,
-    showData: true
+    showData: true,
+    config: null
   }),
   computed: {
     sensors () {
@@ -58,8 +78,13 @@ export default {
       this.showData = this.showData ? false : true
     }
   },
-  mounted () {
-    //this.timeout = setInterval(this.toggleData, 15 * 1000)
+  created () {
+    try {
+      this.config = JSON.parse(this.$route.params.query)
+    } catch (e) {
+      alert('Failed to parse your modules definition, try again')
+      return
+    }
   },
   beforeDestroy () {
     clearInterval(this.toggleData)
