@@ -10,6 +10,7 @@ export default new Router({
   mode: 'history',
   base: '/dust',
   routes: [
-    { path: '/:query?', component: Dashboard }
+    { path: '/bruveien9', component: Dashboard, props: { queryProp: '[{"name":"bus-card","title":"Bruveien 9 (mot sentrum)","from":"19021626,19021601:1"}]' } },
+    { path: '/:query?', component: Dashboard, name: 'dashboard' }
   ]
 })

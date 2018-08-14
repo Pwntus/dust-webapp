@@ -39,6 +39,7 @@
         bus-card(
           :title="item.title"
           :from="item.from"
+          :fullscreen="fullscreen"
         )
       //- Airport Card
       template(v-if="item.name === 'airport-card'")
@@ -63,6 +64,12 @@ export default {
     BusCard,
     AirportCard
   },
+  props: {
+    queryProp: {
+      type: String,
+      default: null
+    }
+  },
   data: () => ({
     timeout: null,
     showData: true,
@@ -71,6 +78,9 @@ export default {
   computed: {
     sensors () {
       return this.$store.getters['App/sensors']
+    },
+    fullscreen () {
+      return this.config.length <= 1
     }
   },
   methods: {
@@ -79,14 +89,16 @@ export default {
     }
   },
   created () {
-    if (typeof this.$route.params.query === 'undefined') {
+    if (typeof this.$route.params.query === 'undefined' && this.queryProp === false) {
       return
     }
 
     try {
-      this.config = JSON.parse(this.$route.params.query)
+      const widgetDefinitions = (this.queryProp === false) ? this.$route.params.query : this.queryProp
+      this.config = JSON.parse(widgetDefinitions)
     } catch (e) {
       alert('Failed to parse your modules definition, try again')
+      this.config = []
       return
     }
   },

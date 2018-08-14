@@ -1,5 +1,5 @@
 <template lang="pug">
-.bus-card.md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100
+.bus-card.md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100(:class="{ 'fullscreen' : fullscreen }")
   md-card
     md-card-header
       md-card-header-text
@@ -33,7 +33,7 @@ const TRAVEL_MAGIC_DATE_FORMAT = 'DD.MM.YYYY HH:mm:ss'
 
 export default {
   name: 'BusCard',
-  props: ['from', 'title'],
+  props: ['from', 'title', 'fullscreen'],
   data: () => ({
     timeout: null,
     timeout_countdown: null,
@@ -109,7 +109,10 @@ export default {
 
               return {...bus}
             })
-            .slice(0, 8)
+
+            if (this.fullscreen === false) {
+              this.filtered = this.filtered.slice(0, 8)
+            }
 
           } catch (e) {
             return
@@ -145,6 +148,18 @@ export default {
 
 <style lang="stylus">
 .bus-card
+  &.fullscreen
+    .md-card
+      position fixed
+      top 15px
+      bottom 15px
+      left 15px
+      right 15px
+      
+      .md-card-content
+        height 100%
+        overflow auto
+
   .gone
     opacity .5
 
