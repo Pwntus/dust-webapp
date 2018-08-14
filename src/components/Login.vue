@@ -37,11 +37,13 @@
 </template>
 
 <script>
+import { MIC_CREDENTIALS } from '@/config'
+
 export default {
   name: 'Login',
   data: () => ({
-    username: '',
-    password: '',
+    username: MIC_CREDENTIALS.username,
+    password: MIC_CREDENTIALS.password,
     loading: false
   }),
   computed: {
@@ -64,8 +66,6 @@ export default {
     }
   },
   mounted () {
-    this.username = ''
-    this.password = ''
     this.login()
   }
 }

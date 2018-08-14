@@ -161,7 +161,9 @@ export default {
         movingMarker._icon.id = id
       }
 
-      this.updatePaths()
+      if (unique.length <= 20) {
+        this.updatePaths()
+      }
     },
     async updatePaths () {
       let traces = []

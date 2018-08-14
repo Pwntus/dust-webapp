@@ -13,3 +13,9 @@ export const THRESHOLDS    = {
     hour: [50, 80, 400]  // > 400
   }
 };
+
+// This is needed to get the dust widgets to work
+export const MIC_CREDENTIALS = {
+  username: '',
+  password: ''
+};
