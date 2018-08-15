@@ -96,9 +96,10 @@ export default {
           skip.push(id)
 
           // Updated data
-          const [ mode_s, lat, lng, track, alt, kts, un0, radar,
-                model, registration, timestamp, origin,
-                destination, un7, un8, un9, name, un10, tag ] = this.rawData[id]
+          const [ mode_s, lat, lng, track, alt, kts, squawk, radar,
+              model, registration, timestamp, origin, destination,
+              flightNumber, isGroundTraffic, verticalSpeed,
+              icaoIdentifier, unknown, airlineIcao] = this.rawData[id]
 
           // Construct track path (a line)
           const start = [lat, lng]
@@ -136,9 +137,10 @@ export default {
 
         unique.push(id)
 
-        const [ mode_s, lat, lng, track, alt, kts, un0, radar,
-                model, registration, timestamp, origin,
-                destination, un7, un8, un9, name, un10, tag ] = this.rawData[id]
+          const [mode_s, lat, lng, track, alt, kts, squawk, radar,
+              model, registration, timestamp, origin, destination,
+              flightNumber, isGroundTraffic, verticalSpeed,
+              icaoIdentifier, unknown, airlineIcao] = this.rawData[id]
 
         // Construct track path (a line)
         const start = [lat, lng]
