@@ -168,9 +168,8 @@ export default {
     async updatePaths () {
       let traces = []
       for (let layer of this.featureGroup.getLayers()) {
-        const id = layer._icon.id
-
         try {
+          const id = layer._icon.id
           const { data } = await axios(`${PROXY}clickhandler/?version=1.5&flight=${id}`)
           traces.push(data.trail.map(t => [t.lat, t.lng]))
         } catch (e) {
