@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import { MIC_CREDENTIALS } from '@/config'
+import { MIC_USERNAME, MIC_PASSWORD } from '@/config'
 
 export default {
   name: 'Login',
   data: () => ({
-    username: MIC_CREDENTIALS.username,
-    password: MIC_CREDENTIALS.password,
+    username: MIC_USERNAME,
+    password: MIC_PASSWORD,
     loading: false
   }),
   computed: {

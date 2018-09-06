@@ -29,6 +29,7 @@
       center="69.67,18.95"
       :zoom="9"
     )
+    td-card
   .md-layout.md-alignment-center(v-if="config !== null")
     template(
       v-for="(item, index) in config"
@@ -48,6 +49,11 @@
           :center="item.center"
           :zoom="item.zoom"
         )
+      //- TD Card
+      template(v-if="item.name === 'td-card'")
+        td-card(
+          :fullscreen="fullscreen"
+        )
 </template>
 
 <script>
@@ -55,6 +61,7 @@ import Reloader from '@/components/Reloader'
 import Card from '@/components/Card'
 import BusCard from '@/components/BusCard'
 import AirportCard from '@/components/AirportCard'
+import TdCard from '@/components/TdCard'
 
 export default {
   name: 'Dashboard',
@@ -62,7 +69,8 @@ export default {
     Reloader,
     Card,
     BusCard,
-    AirportCard
+    AirportCard,
+    TdCard
   },
   props: {
     queryProp: {
