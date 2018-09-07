@@ -53,9 +53,9 @@ export default {
   methods: {
     get_sched_time (bus) {
       if (bus.hasOwnProperty('a2'))
-        return 'exp. ' + bus.a2.format('HH:mm')
+        return 'est. ' + bus.a2.format('HH:mm')
       else if (bus.hasOwnProperty('d2'))
-        return 'exp. ' + bus.d2.format('HH:mm')
+        return 'est. ' + bus.d2.format('HH:mm')
       return ''
     },
     get_live_moment (bus) {
