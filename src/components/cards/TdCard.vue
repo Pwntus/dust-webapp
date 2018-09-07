@@ -35,8 +35,11 @@
 </template>
 
 <script>
-import { FB_ACCESS_TOKEN, FB_TIMEOUT } from '@/config'
 import moment from 'moment'
+
+// eslint-disable-next-line
+export const FB_ACCESS_TOKEN = process.env.VUE_APP_FB_ACCESS_TOKEN || null
+export const FB_TIMEOUT = 3600000
 
 moment.locale('en-gb')
 

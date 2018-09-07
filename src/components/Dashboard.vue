@@ -1,6 +1,5 @@
 <template lang="pug">
 #dashboard
-  reloader(v-if="config === null")
   span.md-display-3(v-if="config === null")
     | Environment at IFI
     .right
@@ -8,28 +7,6 @@
         img(src="../assets/img/startiot-logo.png")
       //a(href="http://airbit.uit.no/" target="_blank")
         img.airbit(src="../assets/img/airbit-logo.png")
-    .c
-  .md-layout.md-alignment-center(v-if="config === null")
-    card(
-      v-for="(sensor, index) in sensors"
-      :sensor="sensor"
-      :show-data="showData"
-      :key="index"
-    )
-    bus-card(
-      from="19021323:2"
-      title="UiT Southbound"
-    )
-    bus-card(
-      from="19021323:1"
-      title="UiT Northbound"
-    )
-    airport-card(
-      title="Tromsø Airport, Langnes"
-      center="69.67,18.95"
-      :zoom="9"
-    )
-    td-card
   .md-layout.md-alignment-center(v-if="config !== null")
     template(
       v-for="(item, index) in config"
@@ -57,17 +34,13 @@
 </template>
 
 <script>
-import Reloader from '@/components/Reloader'
-import Card from '@/components/Card'
-import BusCard from '@/components/BusCard'
-import AirportCard from '@/components/AirportCard'
-import TdCard from '@/components/TdCard'
+import BusCard from '@/components/cards/BusCard'
+import AirportCard from '@/components/cards/AirportCard'
+import TdCard from '@/components/cards/TdCard'
 
 export default {
   name: 'Dashboard',
   components: {
-    Reloader,
-    Card,
     BusCard,
     AirportCard,
     TdCard
@@ -79,21 +52,11 @@ export default {
     }
   },
   data: () => ({
-    timeout: null,
-    showData: true,
     config: null
   }),
   computed: {
-    sensors () {
-      return this.$store.getters['App/sensors']
-    },
     fullscreen () {
       return this.config.length <= 1
-    }
-  },
-  methods: {
-    toggleData () {
-      this.showData = this.showData ? false : true
     }
   },
   created () {
@@ -109,9 +72,6 @@ export default {
       this.config = []
       return
     }
-  },
-  beforeDestroy () {
-    clearInterval(this.toggleData)
   }
 }
 </script>

@@ -1,25 +1,11 @@
 <template lang="pug">
 #app
-  listener
-  login(v-if="!auth")
-  router-view(v-if="auth")
+  router-view
 </template>
 
 <script>
-import Listener from '@/components/Listener'
-import Login from '@/components/Login'
-
 export default {
-  name: 'App',
-  components: {
-    Listener,
-    Login
-  },
-  computed: {
-    auth () {
-      return this.$store.getters['App/auth']
-    }
-  }
+  name: 'App'
 }
 </script>
 
