@@ -24,7 +24,7 @@ import '@/lib/Leaflet.MovingMarker'
 
 const PROXY = 'http://startiot.cs.uit.no:3004/'
 const ICON = L.icon({
-  iconUrl: require('../assets/img/airplane-mode-on-symbol.png'),
+  iconUrl: require('../../assets/img/airplane-mode-on-symbol.png'),
   iconSize:     [20, 20], // size of the icon
   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 })

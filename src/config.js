@@ -19,7 +19,3 @@ export const THRESHOLDS    = {
 export const MIC_USERNAME = process.env.VUE_APP_MIC_USERNAME || null
 // eslint-disable-next-line
 export const MIC_PASSWORD = process.env.VUE_APP_MIC_PASSWORD || null
-
-// eslint-disable-next-line
-export const FB_ACCESS_TOKEN = process.env.VUE_APP_FB_ACCESS_TOKEN || null
-export const FB_TIMEOUT = 3600000

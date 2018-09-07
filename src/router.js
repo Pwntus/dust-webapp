@@ -62,6 +62,37 @@ export default new Router({
         }])
       }
     },
+
+    // Default
+    {
+      path: '',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify([
+          {
+            name: 'bus-card',
+            title: 'UiT (Southbound)',
+            from: '19021323:2'
+          },
+          {
+            name: 'bus-card',
+            title: 'UiT (Northbound)',
+            from: '19021323:1'
+          },
+          {
+            name: 'airport-card',
+            title: 'Tromsø Airport, Langnes',
+            center: '69.67,18.95',
+            zoom: 9
+          },
+          {
+            name: 'td-card'
+          }
+        ])
+      }
+    },
+
+    // Custom query
     {
       path: '/:query?',
       component: Dashboard,
