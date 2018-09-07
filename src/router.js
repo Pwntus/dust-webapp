@@ -32,6 +32,28 @@ export default new Router({
       }
     },
     {
+      path: '/uit-north',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify([{
+          name: 'bus-card',
+          title: 'UiT (Northbound)',
+          from: '19021323:1'
+        }])
+      }
+    },
+    {
+      path: '/uit-south',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify([{
+          name: 'bus-card',
+          title: 'UiT (Southbound)',
+          from: '19021323:2'
+        }])
+      }
+    },
+    {
       path: '/td',
       component: Dashboard,
       props: {
