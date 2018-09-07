@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const REFRESH_HIST  = 15 * 60 * 1000
 export const DEFAULT_FRAME = 'hour'
 export const TOPIC         = 'thing-update/dust/#'
@@ -12,10 +13,8 @@ export const THRESHOLDS    = {
     day:  [30, 50, 150], // > 150
     hour: [50, 80, 400]  // > 400
   }
-};
+}
 
 // This is needed to get the dust widgets to work
-// eslint-disable-next-line
 export const MIC_USERNAME = process.env.VUE_APP_MIC_USERNAME || null
-// eslint-disable-next-line
 export const MIC_PASSWORD = process.env.VUE_APP_MIC_PASSWORD || null

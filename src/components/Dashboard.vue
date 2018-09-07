@@ -1,36 +1,54 @@
 <template lang="pug">
-#dashboard
-  span.md-display-3(v-if="config === null")
-    | Environment at IFI
-    .right
-      a(href="https://startiot.telenor.com/" target="_blank")
-        img(src="../assets/img/startiot-logo.png")
-      //a(href="http://airbit.uit.no/" target="_blank")
-        img.airbit(src="../assets/img/airbit-logo.png")
-  .md-layout.md-alignment-center(v-if="config !== null")
-    template(
+v-container(
+  grid-list-xl
+  fluid
+  :class="{ 'fullscreen' : fullscreen }"
+)
+  v-layout(
+    row wrap
+    :class="{ 'fullscreen' : fullscreen }"
+  )
+
+    //- Title, only shown if at dashboard
+    v-flex.title(
+      v-if="$route.path === '/'"
+      xs12
+    )
+      .display-3
+        | Environment at IFI
+        .right
+          a(href="https://startiot.telenor.com/" target="_blank")
+            img(src="../assets/img/startiot-logo.png")
+          //a(href="http://airbit.uit.no/" target="_blank")
+            img.airbit(src="../assets/img/airbit-logo.png")
+
+    v-flex(
       v-for="(item, index) in config"
       :index="index"
+      xs12
+      :sm6="!fullscreen"
+      :md6="!fullscreen"
+      :lg4="!fullscreen"
+      :xl4="!fullscreen"
     )
-      //- Bus Card
-      template(v-if="item.name === 'bus-card'")
-        bus-card(
-          :title="item.title"
-          :from="item.from"
-          :fullscreen="fullscreen"
-        )
-      //- Airport Card
-      template(v-if="item.name === 'airport-card'")
-        airport-card(
-          :title="item.title"
-          :center="item.center"
-          :zoom="item.zoom"
-        )
-      //- TD Card
-      template(v-if="item.name === 'td-card'")
-        td-card(
-          :fullscreen="fullscreen"
-        )
+      v-card
+        //- Bus Card
+        template(v-if="item.name === 'bus-card'")
+          bus-card(
+            :title="item.title"
+            :from="item.from"
+            :fullscreen="fullscreen"
+          )
+        //- Airport Card
+        template(v-if="item.name === 'airport-card'")
+          airport-card(
+            :title="item.title"
+            :center="item.center"
+            :zoom="item.zoom"
+          )
+        //- TD Card
+        template(v-if="item.name === 'td-card'")
+          td-card
 </template>
 
 <script>
@@ -70,18 +88,17 @@ export default {
     } catch (e) {
       alert('Failed to parse your modules definition, try again')
       this.config = []
-      return
     }
   }
 }
 </script>
 
-<style lang="stylus" scoped>
-#dashboard
-  .md-display-3
-    padding-bottom 20px
-    display block
+<style lang="stylus">
+.container
+  &.fullscreen, .fullscreen
+    height 100%
 
+  .title
     .right
       padding-top 23px
       float right
@@ -91,13 +108,8 @@ export default {
         margin 0 20px 0 20px
         border 0
         float right
-
         &.airbit
           margin 0 0 0 20px
-
-    .c
-      clear both
-
-  .md-layout-item
-    padding 0 20px 20px 0
+  .v-card
+    height 100%
 </style>

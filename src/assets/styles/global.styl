@@ -1,0 +1,63 @@
+html
+  overflow-y auto !important
+
+a
+  text-decoration none
+
+.v-card
+  overflow hidden
+
+  &__title
+    padding-bottom 0
+
+    .headline
+      width 100%
+
+    .type
+      font-size 12px
+      font-weight 500
+      line-height 35px
+      color rgba(0, 0, 0, .7)
+      float right
+
+      .v-icon
+        margin-left 10px
+        font-size 25px
+        line-height 15px
+    
+    .subheader
+      color rgba(0, 0, 0, .5)
+
+  &__text
+    height 385px
+    overflow hidden
+
+    .v-list
+      padding 0
+
+      &__tile
+        padding 0
+
+        &__avatar
+          .v-avatar
+            width 48px
+            height 40px
+            background #448aff
+            border 2px solid #1a5fd2
+            font-size 16px
+
+        &__content
+          font-size 15px !important
+
+          .v-list__tile__title
+            b
+              padding-left 10px
+              color #ff504a
+              font-weight normal
+          .v-list__tile__sub-title
+            font-size 15px !important
+
+        &__action
+          font-size 15px !important
+          color #dcb000
+          text-align right
