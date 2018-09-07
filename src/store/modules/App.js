@@ -1,3 +1,4 @@
+/* eslint-disable */
 import SWorker from 'simple-web-worker'
 import * as t from '@/store/types'
 import { MIC } from '@/lib/MIC'
@@ -226,18 +227,18 @@ const actions = {
         ] } } } }
       }
     })
-    .then(r => { return r.aggregations.hist.buckets })
-    .then(buckets => {
-      // Issue compute heavy task to web-worker
-      return worker.postMessage('set_histogram', [buckets])
-        .then(res => {
-          commit(t.APP_SET_HISTOGRAM, { thingName, res })
-          return Promise.resolve()
-        })
-    })
-    .catch(e => {
-      return Promise.reject(e)
-    })
+      .then(r => { return r.aggregations.hist.buckets })
+      .then(buckets => {
+        // Issue compute heavy task to web-worker
+        return worker.postMessage('set_histogram', [buckets])
+          .then(res => {
+            commit(t.APP_SET_HISTOGRAM, { thingName, res })
+            return Promise.resolve()
+          })
+      })
+      .catch(e => {
+        return Promise.reject(e)
+      })
   }
 }
 
@@ -255,7 +256,7 @@ const getters = {
     try {
       for (let key in tmp) {
         tmp[key].id = key
-        
+
         if (state.names.hasOwnProperty(key))
           tmp[key].name = state.names[key]
         else

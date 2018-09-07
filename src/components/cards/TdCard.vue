@@ -1,37 +1,33 @@
 <template lang="pug">
-.td-card.md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100(:class="{ 'fullscreen' : fullscreen }")
-  md-card
-    md-card-header
-      md-card-header-text
-        .md-title
-          | Tromsøstudentenes Dataforening
-          .type
-            | Upcoming Events
-            md-icon event_note
-        .md-subhead
-          a(
-            href="https://www.td.org.uit.no/"
-            target="_new"
-          ) www.td.org.uit.no
-    md-card-content
-      md-list.md-dense.md-double-line
-        md-list-item(
-          v-for="(event, index) in data"
-          :key="index"
-          :href="link(event)"
-          target="_new"
-        )
-          md-avatar
-            b {{ month(event) }}
-            span {{ day(event) }}
-          .md-list-item-text
-            span
-              | {{ event.name }}
-            span {{ place(event) }}
-          .md-list-action
-            span {{ start_time_ugly(event) }}
-            br
-            span {{ start_time(event) }}
+.card.td
+  v-card-title
+    .headline
+      | Tromsøstudentenes Dataforening
+      .type
+        | Upcoming Events
+        v-icon event_note
+    .subheader
+      a(
+        href="https://www.td.org.uit.no/"
+        target="_new"
+      ) www.td.org.uit.no
+  v-card-text
+    v-list(dense two-line)
+      v-list-tile(
+        v-for="(event, index) in data"
+        :key="index"
+        :href="link(event)"
+        target="_new"
+      )
+        v-list-tile-avatar
+          b {{ month(event) }}
+          span {{ day(event) }}
+        v-list-tile-content
+          v-list-tile-title {{ event.name }}
+          v-list-tile-sub-title {{ place(event) }}
+        v-list-tile-action
+          span {{ start_time_ugly(event) }}
+          span {{ start_time(event) }}
 </template>
 
 <script>
@@ -45,7 +41,6 @@ moment.locale('en-gb')
 
 export default {
   name: 'TdCard',
-  props: ['fullscreen'],
   data: () => ({
     data: [],
     timeout: null
@@ -69,7 +64,7 @@ export default {
       return event.hasOwnProperty('place') ? event.place.name : ''
     },
     start_time_ugly (event) {
-      return  moment(event.start_time).calendar(null, { sameElse: 'D.M.YYYY [at] HH:mm' })
+      return moment(event.start_time).calendar(null, { sameElse: 'D.M.YYYY [at] HH:mm' })
     },
     start_time (event) {
       return moment(event.start_time).fromNow()
@@ -83,8 +78,8 @@ export default {
           let bStartTime = moment(b.start_time)
           return aStartTime.isBefore(bStartTime)
             ? -1
-            : aStartTime.isSame(bStartTime) ? 0 
-            : 1;
+            : aStartTime.isSame(bStartTime) ? 0
+              : 1
         })
         this.data = data.filter(e => {
           let today = moment().startOf('day')
@@ -109,74 +104,21 @@ export default {
 </script>
 
 <style lang="stylus">
-.td-card
-  &.fullscreen
-    .md-card
-      position fixed
-      top 15px
-      bottom 15px
-      left 15px
-      right 15px
-      
-      .md-card-content
-        height 100%
-        overflow auto
+.card.td
+  .v-list__tile__avatar
+    .v-avatar
+      border 0 !important
+      background transparent !important
+      font-size 20px
+      display unset
+      border-radius 0
 
-  .md-card
-    overflow hidden
+      b, span
+        font-weight 400
+        display block
 
-    .md-card-header
-      padding-bottom 0
-      background #FFF
-      
-      .md-title
-        margin-top 0 !important
-      
-      a
-        color #000
-
-      .type
-        font-size 12px
+      b
         font-weight 500
-        line-height 28px
-        color rgba(0, 0, 0, .7)
-        float right
-
-        .md-icon
-          margin-left 10px
-          font-size 18px
-          float right
-
-    .md-card-content
-      height 385px
-      overflow hidden
-
-      .md-list-item
-        margin-bottom 3px
-
-        .md-list-item-content
-          padding-left 0
-          font-size 16px !important
-
-          .md-list-item-text span
-            font-size 16px
-
-          .md-avatar
-            height unset
-            font-size 20px
-            display unset
-            text-align center
-            border-radius 0
-            
-            b, span
-              font-weight 100
-              display block
-            
-            b
-              font-size 13px
-              color #FF0000
-
-          .md-list-action
-            color #dcb000
-            text-align right
+        font-size 13px
+        color #FF0000
 </style>

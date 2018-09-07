@@ -83,7 +83,7 @@ export default new Router({
             name: 'airport-card',
             title: 'Tromsø Airport, Langnes',
             center: '69.67,18.95',
-            zoom: 9
+            zoom: 7
           },
           {
             name: 'td-card'

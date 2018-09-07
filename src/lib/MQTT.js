@@ -63,7 +63,7 @@ class MqttClient {
     })
   }
 
-  publish(topic, message) {
+  publish (topic, message) {
     this.mqtt.publish(topic, message, {qos: 1}, (err) => {
       if (!err)
         this.ctx.showSnackbar('Payload published')
@@ -85,4 +85,4 @@ class MqttClient {
   }
 }
 
-export let MQTT = new MqttClient
+export let MQTT = new MqttClient()

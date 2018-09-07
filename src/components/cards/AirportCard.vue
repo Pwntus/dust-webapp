@@ -1,16 +1,14 @@
 <template lang="pug">
-.airport-card.md-layout-item.md-size-33.md-medium-size-50.md-small-size-100.md-xsmall-size-100
-  md-card
-    md-card-header
-      md-card-header-text
-        .md-title
-          | {{ title }}
-          .type
-            | Airspace
-            md-icon airplanemode_active
-        .md-subhead Live
-    md-card-content
-      #map(ref="map")
+.card.airport
+  v-card-title
+    .headline
+      | {{ title }}
+      .type
+        | Airspace
+        v-icon airplanemode_active
+    .subheader Live
+  v-card-text
+    #map(ref="map")
 </template>
 
 <script>
@@ -219,50 +217,27 @@ export default {
 </script>
 
 <style lang="stylus">
-.airport-card
-  .md-card
+.card.airport
+  .v-card__text
     overflow hidden
+    padding 16px 0 0
 
-    .md-card-header
-      padding-bottom 0
-      background #FFF
-      
-      .md-title
-        margin-top 0 !important
+    #map
+      height 100%
 
-      .type
-        font-size 12px
-        font-weight 500
-        line-height 28px
-        color rgba(0,0,0,.7)
-        float right
+      .leaflet-tooltip-top:before,
+      .leaflet-tooltip-bottom:before,
+      .leaflet-tooltip-left:before,
+      .leaflet-tooltip-right:before
+        border 0
 
-        .md-icon
-          margin-left 10px
-          font-size 18px
-          float right
-
-    .md-card-content
-      height 385px
-      overflow hidden
-      padding 16px 0 0
-
-      #map
-        height 100%
-
-        .leaflet-tooltip-top:before,
-        .leaflet-tooltip-bottom:before,
-        .leaflet-tooltip-left:before,
-        .leaflet-tooltip-right:before
-          border 0
-
-        .tooltip
-          box-shadow none
-          margin-top 20px
-          padding 2px 4px 0
-          border 0
-          font-family monospace
-          font-size 9px
-          background rgba(0, 0, 0, .5)
-          color #FFF
+      .tooltip
+        box-shadow none
+        margin-top 20px
+        padding 2px 4px 0
+        border 0
+        font-family monospace
+        font-size 9px
+        background rgba(0, 0, 0, .5)
+        color #FFF
 </style>
