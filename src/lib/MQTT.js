@@ -1,3 +1,4 @@
+/* eslint-disable */
 import AWSMqtt from 'aws-mqtt-client'
 import { TOPIC } from '@/config'
 import { MIC } from '@/lib/MIC'
@@ -33,9 +34,9 @@ class MqttClient {
         this.kill()
       }
     })
-    .catch(() => {
-      return
-    })
+      .catch(() => {
+        return
+      })
   }
 
   connect () {

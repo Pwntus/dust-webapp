@@ -121,14 +121,9 @@ export default {
             if (this.fullscreen === false) {
               this.filtered = this.filtered.slice(0, 8)
             }
-
-          } catch (e) {
-            return
-          }
+          } catch (e) {}
         })
-        .catch(() => {
-          return
-        })
+        .catch(() => {})
     },
     update_moment () {
       this.filtered = this.filtered.map(bus => {
