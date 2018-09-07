@@ -23,6 +23,8 @@
               b {{ bus.late }}
           .md-list-action
             span {{ bus.live_moment }}
+            br
+            span {{ bus.sched_time }}
 </template>
 
 <script>
@@ -49,15 +51,22 @@ export default {
     }
   },
   methods: {
+    get_sched_time (bus) {
+      if (bus.hasOwnProperty('a2'))
+        return 'est. ' + bus.a2.format('HH:mm')
+      else if (bus.hasOwnProperty('d2'))
+        return 'est. ' + bus.d2.format('HH:mm')
+      return ''
+    },
     get_live_moment (bus) {
       if (bus.hasOwnProperty('a2'))
         return bus.a2.from(this.now)
       else if (bus.hasOwnProperty('a'))
-        return bus.a.format('HH:mm')
+        return bus.a.format('[sched.] HH:mm')
       else if (bus.hasOwnProperty('d2'))
         return bus.d2.from(this.now)
       else if (bus.hasOwnProperty('d'))
-        return bus.d.format('HH:mm')
+        return bus.d.format('[sched.] HH:mm')
       else
         return 'No info'
     },
@@ -106,6 +115,7 @@ export default {
               // Add own properties
               bus.live_moment = this.get_live_moment(bus)
               bus.late = this.get_late(bus)
+              bus.sched_time = this.get_sched_time(bus)
 
               return {...bus}
             })
@@ -125,7 +135,6 @@ export default {
     update_moment () {
       this.filtered = this.filtered.map(bus => {
         bus.live_moment = this.get_live_moment(bus)
-
         return bus
       })
     }
@@ -211,4 +220,5 @@ export default {
 
           .md-list-action
             color #dcb000
+            text-align right
 </style>
