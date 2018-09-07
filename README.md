@@ -45,6 +45,13 @@ The JSON-string must be an array containing object representations of each modul
 }
 ```
 
+**TD-card**
+```json
+{
+  "name": "td-card"
+}
+```
+
 **Example**
 ```json
 [
