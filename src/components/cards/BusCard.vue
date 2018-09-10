@@ -22,7 +22,7 @@
             b {{ bus.late }}
         v-list-tile-action
           span {{ bus.live_moment }}
-          span {{ bus.sched_time }}
+          span(v-if="bus.sched_time !== ''") {{ bus.sched_time }}
 </template>
 
 <script>
@@ -118,9 +118,9 @@ export default {
               return {...bus}
             })
 
-            if (this.fullscreen === false) {
+            /*if (this.fullscreen === false) {
               this.filtered = this.filtered.slice(0, 8)
-            }
+            }*/
           } catch (e) {}
         })
         .catch(() => {})
