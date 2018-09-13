@@ -33,7 +33,7 @@ const TRAVEL_MAGIC_DATE_FORMAT = 'DD.MM.YYYY HH:mm:ss'
 
 export default {
   name: 'BusCard',
-  props: ['from', 'title', 'fullscreen'],
+  props: ['from', 'title'],
   data: () => ({
     timeout: null,
     timeout_countdown: null,
@@ -117,10 +117,6 @@ export default {
 
               return {...bus}
             })
-
-            /*if (this.fullscreen === false) {
-              this.filtered = this.filtered.slice(0, 8)
-            }*/
           } catch (e) {}
         })
         .catch(() => {})
