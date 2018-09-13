@@ -13,53 +13,68 @@ export default new Router({
       path: '/bruveien9',
       component: Dashboard,
       props: {
-        queryProp: JSON.stringify([{
-          name: 'bus-card',
-          title: 'Bruveien 9 (mot sentrum)',
-          from: '19021626,19021601:1'
-        }])
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'bus-card',
+            title: 'Bruveien 9 (mot sentrum)',
+            from: '19021626,19021601:1'
+          }],
+          rows: 1
+        })
       }
     },
     {
       path: '/sentrum-mot-uit',
       component: Dashboard,
       props: {
-        queryProp: JSON.stringify([{
-          name: 'bus-card',
-          title: "Sentrum (mot UiT)",
-          from: '19021022:1'
-        }])
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'bus-card',
+            title: "Sentrum (mot UiT)",
+            from: '19021022:1'
+          }],
+          rows: 1
+        })
       }
     },
     {
       path: '/uit-north',
       component: Dashboard,
       props: {
-        queryProp: JSON.stringify([{
-          name: 'bus-card',
-          title: 'UiT (Northbound)',
-          from: '19021323:1'
-        }])
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'bus-card',
+            title: 'UiT (Northbound)',
+            from: '19021323:1'
+          }],
+          rows: 1
+        })
       }
     },
     {
       path: '/uit-south',
       component: Dashboard,
       props: {
-        queryProp: JSON.stringify([{
-          name: 'bus-card',
-          title: 'UiT (Southbound)',
-          from: '19021323:2'
-        }])
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'bus-card',
+            title: 'UiT (Southbound)',
+            from: '19021323:2'
+          }],
+          rows: 1
+        })
       }
     },
     {
       path: '/td',
       component: Dashboard,
       props: {
-        queryProp: JSON.stringify([{
-          name: 'td-card'
-        }])
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'td-card'
+          }],
+          rows: 1
+        })
       }
     },
 
@@ -68,27 +83,29 @@ export default new Router({
       path: '',
       component: Dashboard,
       props: {
-        queryProp: JSON.stringify([
-          {
-            name: 'bus-card',
-            title: 'UiT (Southbound)',
-            from: '19021323:2'
-          },
-          {
-            name: 'bus-card',
-            title: 'UiT (Northbound)',
-            from: '19021323:1'
-          },
-          {
-            name: 'airport-card',
-            title: 'Tromsø Airport, Langnes',
-            center: '69.67,18.95',
-            zoom: 7
-          },
-          {
-            name: 'td-card'
-          }
-        ])
+        queryProp: JSON.stringify({
+          cards: [{
+              name: 'bus-card',
+              title: 'UiT (Southbound)',
+              from: '19021323:2'
+            },
+            {
+              name: 'bus-card',
+              title: 'UiT (Northbound)',
+              from: '19021323:1'
+            },
+            {
+              name: 'airport-card',
+              title: 'Tromsø Airport, Langnes',
+              center: '69.67,18.95',
+              zoom: 7
+            },
+            {
+              name: 'td-card'
+            }
+          ],
+          rows: 2
+        })
       }
     },
 
