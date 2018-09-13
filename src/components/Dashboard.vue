@@ -8,7 +8,7 @@ v-container(
     v-flex
       .title(v-if="$route.path === '/'")
         .display-3
-          | Environment at IFI {{ cardColumnWidth }}
+          | Environment at IFI
           .right
             a(href="https://startiot.telenor.com/" target="_blank")
               img(src="../assets/img/startiot-logo.png")
