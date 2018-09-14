@@ -159,8 +159,8 @@ export default {
       this.gradient.addColorStop(pc, curColor)
     }
     // Overflow
-    //this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])
-    //this.gradient.addColorStop(1, COLORS[COLORS.length - 1])
+    // this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])
+    // this.gradient.addColorStop(1, COLORS[COLORS.length - 1])
   }
 }
 </script>

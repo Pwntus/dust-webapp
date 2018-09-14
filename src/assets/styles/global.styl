@@ -4,8 +4,22 @@ html
 a
   text-decoration none
 
+#dashboard.fullscreen
+  padding 24px
+
+  .layout-card
+    height 100%
+    
+    .flex-card
+      padding 0
+
 .v-card
-  overflow auto
+  height 100%
+  
+  .card
+    height 100%
+    position relative
+    overflow hidden
 
   &__title
     padding-bottom 0
@@ -29,7 +43,13 @@ a
       color rgba(0, 0, 0, .5)
 
   &__text
-    height: 0
+    position absolute
+    top 72px
+    bottom 0
+    right 0
+    left 16px
+    overflow-y scroll
+    padding-left 0
 
     .v-list
       padding 0

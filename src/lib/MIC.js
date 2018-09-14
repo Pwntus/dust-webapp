@@ -1,7 +1,6 @@
 import AWS from 'aws-sdk'
 
 class ManagedIotCloud {
-  
   /* Init class with host name configured for Start IoT.
    */
   constructor () {
@@ -22,18 +21,16 @@ class ManagedIotCloud {
 
   /* Parse different formats returned by a Lambda call */
   parseError (error) {
-    if (error && error.errorMessage) { return JSON.parse(error.errorMessage).message }
-    else if (typeof(error) === 'string') { return JSON.parse(error) }
-    else { return error }
+    if (error && error.errorMessage) { return JSON.parse(error.errorMessage).message } else if (typeof (error) === 'string') { return JSON.parse(error) } else { return error }
   }
 
   /* Determine if an error returned by a Lambda call is an auth error */
   isAuthError (error) {
     const authErrors = /No data|Token is expired|Invalid login token|Missing credentials in config|is not authorized to perform|Not Found/
-    return  (typeof error === 'string' && error.match(authErrors)) ||
+    return (typeof error === 'string' && error.match(authErrors)) ||
         (typeof error.message === 'string' && error.message.match(authErrors))
   }
-  
+
   /* Fetch manifest from correct URL */
   loadManifest () {
     const manifest_url = `https://1u31fuekv5.execute-api.eu-west-1.amazonaws.com/prod/manifest/?hostname=${this.host}`
@@ -45,21 +42,19 @@ class ManagedIotCloud {
         this.AWS.config.region = manifest.Region
       })
   }
-  
+
   /* Invoke will execute a AWS Lambda function */
   invoke (function_name, payload) {
-
     /* Create an instance of the Lambda call for
      * potentially later usage.
      */
     const invoke_instance = () => {
       return this.lambda(function_name, payload)
     }
-    
+
     /* Run it, but catch errors */
     return invoke_instance()
       .catch(error => {
-
         /* Refresh token if auth error */
         if (this.isAuthError(error)) {
           return this.refreshCredentials()
@@ -68,21 +63,19 @@ class ManagedIotCloud {
         throw error
       })
   }
-  
+
   /* Execute a MIC Cloud API call */
   lambda (function_name, payload) {
     return new Promise((resolve, reject) => {
-
       /* Lambda parameters */
       let params = {
         FunctionName: this.manifest[function_name],
         Payload: JSON.stringify(payload)
       }
-      
+
       /* Invoke the Lambda function */
       let lambda = new this.AWS.Lambda()
       lambda.invoke(params, (err, res) => {
-
         /* Parse response */
         try {
           /* Got error */
@@ -107,7 +100,7 @@ class ManagedIotCloud {
   /* Get AWS Cognito Credentials */
   getCredentials (token = null) {
     /* Don't fetch credentials if we already have them */
-    //if (token == null && this.AWS.config.credentials !== null) return Promise.resolve()
+    // if (token == null && this.AWS.config.credentials !== null) return Promise.resolve()
 
     this.AWS.config.credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: this.manifest.IdentityPool,
@@ -115,7 +108,7 @@ class ManagedIotCloud {
         [`cognito-idp.${this.manifest.Region}.amazonaws.com/${this.manifest.UserPool}`]: token
       }
     })
-    
+
     /* Clear previously cached ID if token is absent */
     if (!token) this.AWS.config.credentials.clearCachedId()
 
@@ -124,15 +117,15 @@ class ManagedIotCloud {
 
   refreshCredentials () {
     const refreshToken = this.account.credentials.refreshToken
-    
+
     if (!refreshToken)
       throw new Error('No Refresh Token')
-    
+
     this.AWS.config.credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: this.manifest.IdentityPool
     })
     this.AWS.config.credentials.clearCachedId()
-    
+
     const refreshPayload = {
       action: 'REFRESH',
       attributes: {
@@ -146,10 +139,9 @@ class ManagedIotCloud {
       })
       .then(() => { return Promise.resolve() })
   }
-  
+
   /* Perform steps needed to create a Cognito Identity */
   login (username, password) {
-
     return this.init()
       .then(() => { return this.getCredentials() })
       .then(() => {
@@ -177,4 +169,4 @@ class ManagedIotCloud {
   }
 }
 
-export let MIC = new ManagedIotCloud
+export let MIC = new ManagedIotCloud()

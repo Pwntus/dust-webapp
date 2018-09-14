@@ -221,6 +221,7 @@ export default {
   .v-card__text
     overflow hidden
     padding 16px 0 0
+    left 0
 
     #map
       height 100%

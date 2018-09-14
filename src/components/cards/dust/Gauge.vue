@@ -26,7 +26,7 @@ import {
   DEFAULT_FRAME
 } from '@/config'
 
-const TEXT  = ['Normal', 'Moderate', 'High', 'Extremely High']
+const TEXT = ['Normal', 'Moderate', 'High', 'Extremely High']
 const CLASS = ['normal', 'moderate', 'high', 'xhigh']
 const OVERFLOW = 50
 
@@ -63,7 +63,7 @@ export default {
       let map = { pm25: 'PM 2.5', pm10: 'PM 10'}
 
       return {
-        text:  TEXT[index],
+        text: TEXT[index],
         class: CLASS[index],
         fill: { color: COLORS[index] },
         particleText: map[this.particle]

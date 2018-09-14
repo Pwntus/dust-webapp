@@ -57,7 +57,7 @@ export default {
   methods: {
     login () {
       if (this.username == '' || this.password == '') return
-        
+
       this.loading = true
       this.$store.dispatch('App/auth', this.payload)
         .catch(() => {
