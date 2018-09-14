@@ -12,22 +12,40 @@
         target="_new"
       ) www.td.org.uit.no
   v-card-text
-    v-list(dense two-line)
-      v-list-tile(
-        v-for="(event, index) in data"
-        :key="index"
-        :href="link(event)"
-        target="_new"
+    v-layout
+      v-flex.mr-2.next-event(
+        xs6
+        v-if="nextEvent !== null"
       )
-        v-list-tile-avatar
-          b {{ month(event) }}
-          span {{ day(event) }}
-        v-list-tile-content
-          v-list-tile-title {{ event.name }}
-          v-list-tile-sub-title {{ place(event) }}
-        v-list-tile-action
-          span {{ start_time_ugly(event) }}
-          span {{ start_time(event) }}
+        v-img.mb-2(
+          :src="nextEventCover"
+          height="100"
+        )
+        .headline {{ nextEvent.name }}
+        .caption.my-2
+          .fade
+          | {{ nextEvent.description }}
+        .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }}. {{ nextEvent.place.name }}
+      v-flex(
+        xs6
+        :xs12="nextEvent === null"
+      )
+        v-list(dense two-line)
+          v-list-tile(
+            v-for="(event, index) in data"
+            :key="index"
+            :href="link(event)"
+            target="_new"
+          )
+            v-list-tile-avatar
+              b {{ month(event) }}
+              span {{ day(event) }}
+            v-list-tile-content
+              v-list-tile-title {{ event.name }}
+              v-list-tile-sub-title {{ place(event) }}
+            v-list-tile-action
+              span {{ start_time_ugly(event) }}
+              span {{ start_time(event) }}
 </template>
 
 <script>
@@ -43,11 +61,18 @@ export default {
   name: 'TdCard',
   data: () => ({
     data: [],
-    timeout: null
+    nextEvent: null,
+    nextEventCover: undefined,
+    timeout: null,
+    timeoutEvent: null,
+    n: 0
   }),
   computed: {
     endpoint () {
       return `https://graph.facebook.com/v3.1/tromsodataforening/events?access_token=${encodeURIComponent(FB_ACCESS_TOKEN)}`
+    },
+    eventCoverEndpoint () {
+      return `https://graph.facebook.com/v3.1/${this.nextEvent.id}?fields=cover&access_token=${encodeURIComponent(FB_ACCESS_TOKEN)}`
     }
   },
   methods: {
@@ -85,6 +110,22 @@ export default {
           let today = moment().startOf('day')
           return moment(e.start_time).isSameOrAfter(today)
         })
+
+        // this.setNextEvent()
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e)
+      }
+    },
+    async setNextEvent () {
+      if (this.data.length <= 0)
+        return
+      this.nextEvent = this.data[this.n]
+
+      try {
+        let response = await fetch(this.eventCoverEndpoint)
+        let { cover } = await response.json()
+        this.nextEventCover = cover.source
       } catch (e) {
         // eslint-disable-next-line
         console.error(e)
@@ -96,6 +137,10 @@ export default {
     this.timeout = setInterval(() => {
       this.poll()
     }, FB_TIMEOUT)
+    this.timeoutEvent = setInterval(() => {
+      this.n = this.n >= this.data.length ? 0 : this.n + 1
+      this.setNextEvent()
+    }, 15000)
   },
   beforeDestroy () {
     clearInterval(this.timeout)
@@ -105,6 +150,27 @@ export default {
 
 <style lang="stylus">
 .card.td
+  .v-card__text > .layout
+    position absolute
+    top 16px
+    bottom 0
+    right 16px
+
+  .next-event
+    .caption
+      position relative
+      text-overflow ellipsis
+      overflow hidden
+      height 40%
+
+      .fade
+        position absolute
+        top 0
+        bottom 0
+        right 0
+        left 0
+        background-image linear-gradient(to top, #FFF, rgba(0,0,0,0), rgba(0,0,0,0))
+
   .v-list__tile__avatar
     .v-avatar
       border 0 !important
