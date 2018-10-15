@@ -4,7 +4,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { PubSub } from 'aws-amplify'
 import { REFRESH_HIST } from '@/config'
 import { MQTT } from '@/lib/MQTT'
 

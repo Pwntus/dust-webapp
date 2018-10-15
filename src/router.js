@@ -15,7 +15,10 @@ export default new Router({
       component: Dashboard,
       props: {
         queryProp: JSON.stringify({
-          cards: [],
+          cards: [{
+            name: 'dust-card',
+            thingId: '00001337'
+          }],
           rows: 1
         })
       }
@@ -95,7 +98,22 @@ export default new Router({
       component: Dashboard,
       props: {
         queryProp: JSON.stringify({
-          cards: [{
+          cards: [
+            {
+              name: 'dust-card',
+              thingId: '00001337'
+            },
+            {
+              name: 'dust-card',
+              thingId: '00001341'
+            },
+            {
+              name: 'airport-card',
+              title: 'Tromsø Airport, Langnes',
+              center: '69.67,18.95',
+              zoom: 7
+            },
+            {
               name: 'bus-card',
               title: 'UiT (Southbound)',
               from: '19021323:2'
@@ -104,12 +122,6 @@ export default new Router({
               name: 'bus-card',
               title: 'UiT (Northbound)',
               from: '19021323:1'
-            },
-            {
-              name: 'airport-card',
-              title: 'Tromsø Airport, Langnes',
-              center: '69.67,18.95',
-              zoom: 7
             },
             {
               name: 'td-card'

@@ -134,29 +134,46 @@ export default {
       }
     }
   },
-  mounted () {
-    let canvas = this.$refs.localHistogram.$refs.canvas
-    let chart = this.$refs.localHistogram.$data._chart
+  methods: {
+    generateGradient () {
+      let canvas = this.$refs.localHistogram.$refs.canvas
+      let chart = this.$refs.localHistogram.$data._chart
 
-    let yAxis = chart.scales['y-axis-0']
-    let minValueYPixel = yAxis.getPixelForValue(0)
-    let maxValueYPixel = yAxis.getPixelForValue(this.max)
-    this.gradient = canvas.getContext('2d').createLinearGradient(0, minValueYPixel, 0, maxValueYPixel)
+      let yAxis = chart.scales['y-axis-0']
+      let minValueYPixel = yAxis.getPixelForValue(0)
+      let maxValueYPixel = yAxis.getPixelForValue(this.max)
+      this.gradient = canvas.getContext('2d').createLinearGradient(0, minValueYPixel, 0, maxValueYPixel)
 
-    let curColor = COLORS[0]
-    this.gradient.addColorStop(0, curColor)
-    for (let i = 0; i < this.th.length; i++) {
-      let pc = 1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel)
-      pc = pc < 0 ? 0 : pc
-      pc = pc > 1 ? 1 : pc
+      let curColor = COLORS[0]
+      this.gradient.addColorStop(0, curColor)
+      for (let i = 0; i < this.th.length; i++) {
+        let pc = 1 - (yAxis.getPixelForValue(this.th[i]) / minValueYPixel)
+        pc = pc < 0 ? 0 : pc
+        pc = pc > 1 ? 1 : pc
 
-      this.gradient.addColorStop(pc, curColor)
-      curColor = COLORS[i + 1]
-      this.gradient.addColorStop(pc, curColor)
+        this.gradient.addColorStop(pc, curColor)
+        curColor = COLORS[i + 1]
+        this.gradient.addColorStop(pc, curColor)
+      }
+      // Overflow
+      // this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])
+      // this.gradient.addColorStop(1, COLORS[COLORS.length - 1])
     }
-    // Overflow
-    // this.gradient.addColorStop(this.ratios[this.ratios.length - 1], COLORS[COLORS.length - 1])
-    // this.gradient.addColorStop(1, COLORS[COLORS.length - 1])
+  },
+  watch: {
+    histogram: {
+      handler: function () {
+        this.generateGradient()
+      },
+      deep: true
+    }
+  },
+  mounted () {
+    this.generateGradient()
+    window.addEventListener('resize', this.generateGradient)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.generateGradient)
   }
 }
 </script>
@@ -164,6 +181,7 @@ export default {
 <style lang="stylus">
 .graph
   width 100%
+  height 100%
   position relative
   opacity 0
 
@@ -176,6 +194,10 @@ export default {
   &.visible
     opacity 1
 
-  canvas
-    height 190px !important
+  div
+    width 100%
+    height 100%
+
+    canvas
+      max-height 100% !important
 </style>

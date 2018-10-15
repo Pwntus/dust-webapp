@@ -1,9 +1,9 @@
-import Amplify, { Auth, PubSub } from 'aws-amplify'
+import Amplify, { Auth } from 'aws-amplify'
 import { AWSIoTProvider } from '@aws-amplify/pubsub/lib/Providers'
 
-Amplify.Logger.LOG_LEVEL = process.env.NODE_ENV === 'development'
-  ? 'DEBUG'
-  : 'ERROR'
+// Amplify.Logger.LOG_LEVEL = process.env.NODE_ENV === 'development'
+//   ? 'DEBUG'
+//   : 'ERROR'
 
 Amplify.configure({
   Auth: {
@@ -33,5 +33,5 @@ Amplify.configure({
 // Apply plugin with configuration
 Amplify.addPluggable(new AWSIoTProvider({
   aws_pubsub_region: process.env.VUE_APP_AWS_REGION,
-  aws_pubsub_endpoint: process.env.VUE_APP_AWS_IOT_ENDPOINT,
+  aws_pubsub_endpoint: process.env.VUE_APP_AWS_IOT_ENDPOINT
 }))

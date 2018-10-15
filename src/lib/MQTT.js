@@ -1,3 +1,4 @@
+/* eslint-disable */
 import AWSMqtt from 'aws-mqtt-client'
 import { Auth } from 'aws-amplify'
 import { TOPIC } from '@/config'
@@ -53,7 +54,6 @@ class MqttClient {
   }
 
   message (topic, message) {
-    console.log(topic, message.toString('utf-8'))
     this.ctx.$store.dispatch('App/message', {
       topic: topic,
       message: message.toString('utf-8')

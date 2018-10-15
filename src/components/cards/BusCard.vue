@@ -36,7 +36,7 @@ export default {
   props: ['from', 'title'],
   data: () => ({
     timeout: null,
-    timeout_countdown: null,
+    last_poll: +new Date(),
     diff: 0,
     filtered: []
   }),
@@ -130,16 +130,20 @@ export default {
   },
   mounted () {
     this.poll()
+
     this.timeout = setInterval(() => {
-      this.poll()
-    }, 30000)
-    this.timeout_countdown = setInterval(() => {
-      this.update_moment()
+      this.update_moment() // Refresh momentjs values
+
+      // Check if need to poll (more than 15s since last)
+      const unix = +new Date()
+      if (unix - this.last_poll > 15000) {
+        this.last_poll = unix
+        this.poll()
+      }
     }, 1000)
   },
   beforeDestroy () {
     clearInterval(this.timeout)
-    clearInterval(this.timeout_countdown)
   }
 }
 </script>

@@ -43,7 +43,7 @@ v-container#dashboard-cards(fluid)
         template(v-if="item.name === 'dust-card'")
           dust-card(
             :title="item.title"
-            :thing-id="item.thing"
+            :thing-id="item.thingId"
           )
 </template>
 

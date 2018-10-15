@@ -20,11 +20,11 @@
         :src="nextEventCover"
         height="100"
       )
-      .headline {{ nextEvent.name }}
+      .headline {{ name(nextEvent) }}
       .caption.my-2
         .fade
-        | {{ nextEvent.description }}
-      .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }}. {{ nextEvent.place.name }}
+        | {{ description(nextEvent) }}
+      .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }}. {{ placeName(nextEvent) }}
 
     //- Right section
     .td-layout-right(
@@ -41,8 +41,8 @@
             b {{ month(event) }}
             span {{ day(event) }}
           v-list-tile-content
-            v-list-tile-title {{ event.name }}
-            v-list-tile-sub-title {{ place(event) }}
+            v-list-tile-title {{ name(event) }}
+            v-list-tile-sub-title {{ placeName(event) }}
           v-list-tile-action
             span {{ start_time_ugly(event) }}
             span {{ start_time(event) }}
@@ -73,7 +73,11 @@ export default {
       return `https://graph.facebook.com/v3.1/tromsodataforening/events?access_token=${encodeURIComponent(FB_ACCESS_TOKEN)}`
     },
     eventCoverEndpoint () {
-      return `https://graph.facebook.com/v3.1/${this.nextEvent.id}?fields=cover&access_token=${encodeURIComponent(FB_ACCESS_TOKEN)}`
+      try {
+        return `https://graph.facebook.com/v3.1/${this.nextEvent.id}?fields=cover&access_token=${encodeURIComponent(FB_ACCESS_TOKEN)}`
+      } catch (e) {
+        return ''
+      }
     },
     showLeft () {
       return this.$vuetify.breakpoint.lgAndUp
@@ -81,22 +85,60 @@ export default {
   },
   methods: {
     day (event) {
-      return moment(event.start_time).format('D')
+      try {
+        return moment(event.start_time).format('D')
+      } catch (e) {
+        return ''
+      }
     },
     month (event) {
-      return moment(event.start_time).format('MMM')
+      try {
+        return moment(event.start_time).format('MMM')
+      } catch (e) {
+        return ''
+      }
     },
     link (event) {
-      return `https://www.facebook.com/events/${event.id}`
+      try {
+        return `https://www.facebook.com/events/${event.id}`
+      } catch (e) {
+        return ''
+      }
     },
-    place (event) {
-      return event.hasOwnProperty('place') ? event.place.name : ''
+    description (event) {
+      try {
+        return event.description
+      } catch (e) {
+        return ''
+      }
+    },
+    name (event) {
+      try {
+        return event.name
+      } catch (e) {
+        return ''
+      }
+    },
+    placeName (event) {
+      try {
+        return event.place.name
+      } catch (e) {
+        return ''
+      }
     },
     start_time_ugly (event) {
-      return moment(event.start_time).calendar(null, { sameElse: 'D.M.YYYY [at] HH:mm' })
+      try {
+        return moment(event.start_time).calendar(null, { sameElse: 'D.M.YYYY [at] HH:mm' })
+      } catch (e) {
+        return ''
+      }
     },
     start_time (event) {
-      return moment(event.start_time).fromNow()
+      try {
+        return moment(event.start_time).fromNow()
+      } catch (e) {
+        return ''
+      }
     },
     async poll () {
       try {

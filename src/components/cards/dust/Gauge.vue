@@ -1,21 +1,21 @@
 <template lang="pug">
-.gauge
+.gauge(:class="{ visible: value !== null }")
   b {{ data.particleText }} µg/m³
   vue-circle(
     :progress="valuePc"
-    :size="150"
+    :size="300"
     line-cap="round"
     :fill="data.fill"
     empty-fill="rgba(0, 0, 0, .05)"
     insert-mode="append"
-    :thickness="8"
+    :thickness="15"
     :show-percent="false"
     ref="roundGauge"
   )
     p(:class="data.class")
       | {{ data.text }}
       br
-      span {{ value.toFixed(1) }}
+      span {{ val.toFixed(1) }}
 </template>
 
 <script>
@@ -39,6 +39,9 @@ export default {
     }
   },
   computed: {
+    val () {
+      return this.value === null ? 0 : this.value
+    },
     th () {
       return THRESHOLDS[this.particle][DEFAULT_FRAME]
     },
@@ -46,17 +49,17 @@ export default {
       return this.th[this.th.length - 1] + OVERFLOW
     },
     valuePc () {
-      let pc = (this.value / this.max)
+      let pc = (this.val / this.max)
       pc = pc > 100 ? 100 : pc
       return pc * 100
     },
     data () {
       let index = 0
       for (let i = 0; i < this.th.length; i++) {
-        if (this.value >= this.th[i])
+        if (this.val >= this.th[i])
           index = i + 1
       }
-      let map = { pm25: 'PM 2.5', pm10: 'PM 10'}
+      let map = { pm25: 'PM 2.5', pm10: 'PM 10' }
 
       return {
         text: TEXT[index],
@@ -72,18 +75,52 @@ export default {
 <style lang="stylus">
 .gauge
   width 100%
+  height 100%
   position relative
   text-align center
   font-size 10px
+  opacity 0
+
+  -webkit-transition opacity 1s ease-in-out
+  -moz-transition opacity 1s ease-in-out
+  -ms-transition opacity 1s ease-in-out
+  -o-transition opacity 1s ease-in-out
+  transition opacity 1s ease-in-out
+
+  &.visible
+    opacity 1
 
   b
-    padding-bottom 5px
+    padding-top 10px
     line-height 10px
     display block
 
   .circle
+    width 100%
+    height 100%
+
+    // f*** u flexbox
+    display -webkit-box
+    display -ms-flexbox
+    display flex
+    -webkit-box-orient vertical
+    -webkit-box-direction normal
+    -ms-flex-direction column
+    flex-direction column
+    -webkit-box-align center
+    -ms-flex-align center
+    align-items center
+    -webkit-box-pack center
+    -ms-flex-pack center
+    justify-content center
+
+    canvas
+      max-width calc(100% - 30px)
+      max-height calc(100% - 30px)
+
     p
       line-height 15px
+      margin 0
 
       &.normal   { color #53d053 }
       &.moderate { color #ff9900 }
