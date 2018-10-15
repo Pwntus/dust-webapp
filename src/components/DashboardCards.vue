@@ -39,19 +39,27 @@ v-container#dashboard-cards(fluid)
         //- TD Card
         template(v-if="item.name === 'td-card'")
           td-card
+        //- Dust Card
+        template(v-if="item.name === 'dust-card'")
+          dust-card(
+            :title="item.title"
+            :thing-id="item.thing"
+          )
 </template>
 
 <script>
 import BusCard from '@/components/cards/BusCard'
 import AirportCard from '@/components/cards/AirportCard'
 import TdCard from '@/components/cards/TdCard'
+import DustCard from '@/components/cards/DustCard'
 
 export default {
   name: 'DashboardCards',
   components: {
     BusCard,
     AirportCard,
-    TdCard
+    TdCard,
+    DustCard
   },
   props: {
     queryProp: {

@@ -67,10 +67,10 @@
 
 <script>
 import moment from 'moment'
-import Gauge from '@/components/Gauge'
-import GaugeTemp from '@/components/GaugeTemp'
-import Graph from '@/components/Graph'
-import GraphTemp from '@/components/GraphTemp'
+import Gauge from '@/components/cards/dust/Gauge'
+import GaugeTemp from '@/components/cards/dust/GaugeTemp'
+import Graph from '@/components/cards/dust/Graph'
+import GraphTemp from '@/components/cards/dust/GraphTemp'
 
 export default {
   name: 'Card',

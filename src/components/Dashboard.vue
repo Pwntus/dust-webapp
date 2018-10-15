@@ -1,16 +1,19 @@
 <template lang="pug">
 #dashboard(:class="{ 'fullscreen' : fullscreen }")
+  init-dust
   dashboard-title
   dashboard-cards(:query-prop="queryProp")
 </template>
 
 <script>
+import InitDust from '@/components/InitDust'
 import DashboardTitle from '@/components/DashboardTitle'
 import DashboardCards from '@/components/DashboardCards'
 
 export default {
   name: 'Dashboard',
   components: {
+    InitDust,
     DashboardTitle,
     DashboardCards
   },

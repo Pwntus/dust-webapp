@@ -3,6 +3,7 @@ import router from '@/router'
 import store from '@/store'
 import App from '@/App'
 
+import '@/lib/Amplify'
 import '@/lib/Vuetify'
 
 Vue.config.productionTip = false

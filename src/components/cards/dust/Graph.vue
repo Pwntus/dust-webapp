@@ -8,13 +8,9 @@
 </template>
 
 <script>
-import Histogram from '@/components/Histogram'
+import Histogram from '@/components/cards/dust/Histogram'
 import moment from 'moment'
-import {
-  COLORS,
-  THRESHOLDS,
-  DEFAULT_FRAME
-} from '@/config'
+import { COLORS, THRESHOLDS, DEFAULT_FRAME } from '@/config'
 
 const OVERFLOW = 500
 

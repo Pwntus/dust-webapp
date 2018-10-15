@@ -20,11 +20,7 @@
 
 <script>
 import VueCircle from 'vue2-circle-progress'
-import {
-  COLORS,
-  THRESHOLDS,
-  DEFAULT_FRAME
-} from '@/config'
+import { COLORS, THRESHOLDS, DEFAULT_FRAME } from '@/config'
 
 const TEXT = ['Normal', 'Moderate', 'High', 'Extremely High']
 const CLASS = ['normal', 'moderate', 'high', 'xhigh']

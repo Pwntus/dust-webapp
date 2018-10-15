@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vuetify/vuex-cognito-module": "^0.2.0",
+    "aws-amplify": "^1.1.6",
     "aws-mqtt-client": "0.0.5",
     "aws-sdk": "^2.253.1",
     "axios": "^0.18.0",

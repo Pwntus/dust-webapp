@@ -1,9 +1,8 @@
 /* eslint-disable */
 import SWorker from 'simple-web-worker'
+import { API } from 'aws-amplify'
 import * as t from '@/store/types'
-import { MIC } from '@/lib/MIC'
-import { MQTT } from '@/lib/MQTT'
-import { THING_TYPE } from '@/config'
+import { API_NAME, THING_TYPE } from '@/config'
 
 let worker = SWorker.create([{
   message: 'set_histogram',
@@ -81,16 +80,12 @@ let worker = SWorker.create([{
 }])
 
 const state = {
-  auth: false,
   sensors: {},
   names: {},
   histograms: {}
 }
 
 const mutations = {
-  [t.APP_SET_AUTH] (state, value) {
-    state.auth = value
-  },
   [t.APP_SET_DATA] (state, {topic, data}) {
     try {
       const id = topic.slice(-8)
@@ -134,15 +129,6 @@ const mutations = {
 }
 
 const actions = {
-  auth ({commit, dispatch}, {username, password, ctx}) {
-    return MIC.login(username, password)
-      .then(account => {
-        commit(t.APP_SET_AUTH, 1)
-        MQTT.init(ctx)
-        dispatch('getNames')
-        return Promise.resolve(account)
-      })
-  },
   message ({commit, dispatch}, {topic, message}) {
     try {
       let data = JSON.parse(message)
@@ -160,92 +146,93 @@ const actions = {
       return
     }
   },
-  getNames ({commit}) {
-    MIC.invoke('ThingLambda', {
-      action: 'FIND',
-      query: {
-        size: 50,
-        query: { term: { thingType: THING_TYPE } }
-      }
-    })
-    .then(r => { return r.hits.hits })
-    .then(sensors => {
-      commit(t.APP_SET_NAMES, sensors)
-    })
-    .catch(() => {
-      return
-    })
-  },
-  getHistogram ({state, commit}, thingName = null) {
-    // Fetch for all sensors
-    if (thingName == null) {
-      thingName = []
-      for (let key in state.sensors)
-        thingName.push(key)
+  async getNames ({ commit }) {
+    let result = [] // Default value
 
-      if (thingName.length <= 0)
-        return
-    }
-
-    // Format correct terms-clause in ES query
-    if (thingName.constructor !== Array)
-      thingName = [thingName]
-
-    return MIC.invoke('ObservationLambda', {
-      action: 'FIND',
-      query: {
-        size: 0,
-        aggs: {
-          hist: {
-            date_histogram: {
-              field: 'timestamp',
-              interval: '15m',
-              time_zone: '+01:00',
-              min_doc_count: 1,
-              extended_bounds: {}
-            },
-            aggs: {
-              v10: { avg: { field: 'state.v10' } },
-              v25: { avg: { field: 'state.v25' } },
-              tmp: { avg: { field: 'state.tmp' } },
-              hum: { avg: { field: 'state.hum' } }
-            }
+    try {
+      const response = await API.post(API_NAME, '/things/find', {
+        body: {
+          query: {
+            size: 50,
+            query: { term: { thingType: THING_TYPE } }
           }
-        },
-        query: { bool: { filter: { bool: { must: [
-          { terms: { thingName: thingName } },
-          { range: { timestamp: {
-            gte: + new Date() - (24 * 60 * 60 * 1000), // 24 hours
-            lte: + new Date()
-            } } }
-        ],
-        should: [
-          { exists: { field: 'state.v10' } },
-          { exists: { field: 'state.v25' } },
-          { exists: { field: 'state.tmp' } },
-          { exists: { field: 'state.hum' } }
-        ] } } } }
+        }
+      })
+      result = response.hits.hits
+    } catch (e) {
+      throw e
+    } finally {
+      commit(t.APP_SET_NAMES, result)
+    }
+  },
+  async getHistogram ({ state, commit }, thingName = null) {
+    try {
+      // Fetch for all sensors
+      if (thingName == null) {
+        thingName = []
+        for (let key in state.sensors)
+          thingName.push(key)
+
+        if (thingName.length <= 0)
+          return
       }
-    })
-      .then(r => { return r.aggregations.hist.buckets })
-      .then(buckets => {
-        // Issue compute heavy task to web-worker
-        return worker.postMessage('set_histogram', [buckets])
-          .then(res => {
-            commit(t.APP_SET_HISTOGRAM, { thingName, res })
-            return Promise.resolve()
-          })
+
+      // Format correct terms-clause in ES query
+      if (thingName.constructor !== Array)
+        thingName = [thingName]
+
+      const response = await API.post(API_NAME, '/observations/find', {
+        body: {
+          queryScope: {
+            thingTypes: [ THING_TYPE ]
+          },
+          query: {
+            size: 0,
+            aggs: {
+              hist: {
+                date_histogram: {
+                  field: 'timestamp',
+                  interval: '15m',
+                  time_zone: '+01:00',
+                  min_doc_count: 1,
+                  extended_bounds: {}
+                },
+                aggs: {
+                  v10: { avg: { field: 'state.v10' } },
+                  v25: { avg: { field: 'state.v25' } },
+                  tmp: { avg: { field: 'state.tmp' } },
+                  hum: { avg: { field: 'state.hum' } }
+                }
+              }
+            },
+            query: { bool: { filter: { bool: { must: [
+              { terms: { thingName: thingName } },
+              { range: { timestamp: {
+                gte: + new Date() - (24 * 60 * 60 * 1000), // 24 hours
+                lte: + new Date()
+                } } }
+            ],
+            should: [
+              { exists: { field: 'state.v10' } },
+              { exists: { field: 'state.v25' } },
+              { exists: { field: 'state.tmp' } },
+              { exists: { field: 'state.hum' } }
+            ] } } } }
+          }
+        }
       })
-      .catch(e => {
-        return Promise.reject(e)
-      })
+
+      const buckets = response.aggregations.hist.buckets
+      const worker_result = await worker.postMessage('set_histogram', [buckets])
+      commit(t.APP_SET_HISTOGRAM, { thingName, worker_result })
+    } catch (e) {
+      console.log(e)
+      throw e
+    }
   }
 }
 
 const getters = {
-  auth: (state) => {
-    return state.auth
-  },
   names: (state) => {
     return state.names
   },

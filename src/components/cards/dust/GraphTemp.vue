@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Histogram from '@/components/Histogram'
+import Histogram from '@/components/cards/dust/Histogram'
 import moment from 'moment'
 
 export default {

@@ -9,7 +9,18 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   base: '/dust',
-  routes: [{
+  routes: [
+    {
+      path: '/debug',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify({
+          cards: [],
+          rows: 1
+        })
+      }
+    },
+    {
       path: '/bruveien9',
       component: Dashboard,
       props: {

@@ -219,9 +219,9 @@ export default {
 <style lang="stylus">
 .card.airport
   .v-card__text
+    height 100%
     overflow hidden
     padding 16px 0 0
-    left 0
 
     #map
       height 100%

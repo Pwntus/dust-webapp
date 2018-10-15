@@ -19,7 +19,10 @@ a
   .card
     height 100%
     position relative
-    overflow hidden
+    overflow auto
+    
+    &::-webkit-scrollbar
+      width 0 !important
 
   &__title
     padding-bottom 0
@@ -43,16 +46,8 @@ a
       color rgba(0, 0, 0, .5)
 
   &__text
-    position absolute
-    top 72px
-    bottom 0
-    right 0
-    left 16px
-    overflow-y scroll
-    padding-left 0
-
     .v-list
-      padding 0
+      padding 0 !important
 
       &__tile
         padding 0

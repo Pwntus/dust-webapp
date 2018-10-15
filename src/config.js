@@ -1,7 +1,8 @@
 /* eslint-disable */
+export const API_NAME      = process.env.VUE_APP_API_NAME
 export const REFRESH_HIST  = 15 * 60 * 1000
 export const DEFAULT_FRAME = 'hour'
-export const TOPIC         = 'thing-update/dust/#'
+export const TOPIC         = 'thing-update/StartIoT/dust/#'
 export const THING_TYPE    = 490
 export const COLORS        = ['#6ee86e', '#ff9900', '#ff0000', '#990099']
 export const THRESHOLDS    = {
@@ -14,7 +15,3 @@ export const THRESHOLDS    = {
     hour: [50, 80, 400]  // > 400
   }
 }
-
-// This is needed to get the dust widgets to work
-export const MIC_USERNAME = process.env.VUE_APP_MIC_USERNAME || null
-export const MIC_PASSWORD = process.env.VUE_APP_MIC_PASSWORD || null

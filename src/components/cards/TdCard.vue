@@ -12,40 +12,40 @@
         target="_new"
       ) www.td.org.uit.no
   v-card-text
-    v-layout
-      v-flex.mr-2.next-event(
-        xs6
-        v-if="nextEvent !== null"
+    //- Left section
+    .td-layout-left(
+      v-if="showLeft"
+    )
+      v-img.mb-2(
+        :src="nextEventCover"
+        height="100"
       )
-        v-img.mb-2(
-          :src="nextEventCover"
-          height="100"
+      .headline {{ nextEvent.name }}
+      .caption.my-2
+        .fade
+        | {{ nextEvent.description }}
+      .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }}. {{ nextEvent.place.name }}
+
+    //- Right section
+    .td-layout-right(
+      :class="{ 'half' : showLeft }"
+    )
+      v-list(dense two-line)
+        v-list-tile(
+          v-for="(event, index) in data"
+          :key="index"
+          :href="link(event)"
+          target="_new"
         )
-        .headline {{ nextEvent.name }}
-        .caption.my-2
-          .fade
-          | {{ nextEvent.description }}
-        .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }}. {{ nextEvent.place.name }}
-      v-flex(
-        xs6
-        :xs12="nextEvent === null"
-      )
-        v-list(dense two-line)
-          v-list-tile(
-            v-for="(event, index) in data"
-            :key="index"
-            :href="link(event)"
-            target="_new"
-          )
-            v-list-tile-avatar
-              b {{ month(event) }}
-              span {{ day(event) }}
-            v-list-tile-content
-              v-list-tile-title {{ event.name }}
-              v-list-tile-sub-title {{ place(event) }}
-            v-list-tile-action
-              span {{ start_time_ugly(event) }}
-              span {{ start_time(event) }}
+          v-list-tile-avatar
+            b {{ month(event) }}
+            span {{ day(event) }}
+          v-list-tile-content
+            v-list-tile-title {{ event.name }}
+            v-list-tile-sub-title {{ place(event) }}
+          v-list-tile-action
+            span {{ start_time_ugly(event) }}
+            span {{ start_time(event) }}
 </template>
 
 <script>
@@ -64,7 +64,8 @@ export default {
     nextEvent: null,
     nextEventCover: undefined,
     timeout: null,
-    timeoutEvent: null,
+    timeout_event: null,
+    timeout_countdown: null,
     n: 0
   }),
   computed: {
@@ -73,6 +74,9 @@ export default {
     },
     eventCoverEndpoint () {
       return `https://graph.facebook.com/v3.1/${this.nextEvent.id}?fields=cover&access_token=${encodeURIComponent(FB_ACCESS_TOKEN)}`
+    },
+    showLeft () {
+      return this.$vuetify.breakpoint.lgAndUp
     }
   },
   methods: {
@@ -111,6 +115,8 @@ export default {
           return moment(e.start_time).isSameOrAfter(today)
         })
 
+        this.setNextEvent()
+
         // this.setNextEvent()
       } catch (e) {
         // eslint-disable-next-line
@@ -130,6 +136,11 @@ export default {
         // eslint-disable-next-line
         console.error(e)
       }
+    },
+    update_moment () {
+      try {
+        this.data = this.data.slice()
+      } catch (e) {}
     }
   },
   mounted () {
@@ -137,31 +148,34 @@ export default {
     this.timeout = setInterval(() => {
       this.poll()
     }, FB_TIMEOUT)
-    this.timeoutEvent = setInterval(() => {
+    this.timeout_event = setInterval(() => {
       this.n = this.n >= this.data.length ? 0 : this.n + 1
       this.setNextEvent()
-    }, 15000)
+    }, 45000)
+    this.timeout_countdown = setInterval(() => {
+      this.update_moment()
+    }, 1000)
   },
   beforeDestroy () {
     clearInterval(this.timeout)
+    clearInterval(this.timeout_event)
+    clearInterval(this.timeout_countdown)
   }
 }
 </script>
 
 <style lang="stylus">
 .card.td
-  .v-card__text > .layout
-    position absolute
-    top 16px
-    bottom 0
-    right 16px
+  .td-layout-left
+    float left
+    width 50%
+    height 100%
 
-  .next-event
-    .caption
+    .caption.my-2
+      max-height 40%
       position relative
       text-overflow ellipsis
       overflow hidden
-      height 40%
 
       .fade
         position absolute
@@ -171,8 +185,23 @@ export default {
         left 0
         background-image linear-gradient(to top, #FFF, rgba(0,0,0,0), rgba(0,0,0,0))
 
+  .td-layout-right
+    float left
+    width 100%
+
+    &.half
+      width 50%
+
+  .v-card__text
+    position absolute
+    top 72px
+    bottom 0
+    right 0
+    left 0
+
   .v-list__tile__avatar
     .v-avatar
+      margin-top -5px
       border 0 !important
       background transparent !important
       font-size 20px
