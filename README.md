@@ -26,6 +26,14 @@ Simply append a JSON-string at the end of the URL, like this: [http://startiot.c
 
 The JSON-string must be an array containing object representations of each module to add to the screen. The following module definitions are available:
 
+**Dust-card**
+```json
+{
+  "name": "dust-card",
+  "thingId": "Managed IoT Cloud Thing ID"
+}
+```
+
 **Bus Card**
 ```json
 {
@@ -65,6 +73,10 @@ The JSON-string must be an array containing object representations of each modul
     "title": "Helsinki-Vantaan lentoasema",
     "center": "60.32,24.95",
     "zoom": "9"
+  },
+  {
+    "name": "dust-card",
+    "thingId": "00001337"
   }
 ]
 ```
