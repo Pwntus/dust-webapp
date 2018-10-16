@@ -98,25 +98,21 @@ export default {
   .circle
     width 100%
     height 100%
-
-    // f*** u flexbox
-    display -webkit-box
-    display -ms-flexbox
-    display flex
-    -webkit-box-orient vertical
-    -webkit-box-direction normal
-    -ms-flex-direction column
-    flex-direction column
-    -webkit-box-align center
-    -ms-flex-align center
-    align-items center
-    -webkit-box-pack center
-    -ms-flex-pack center
-    justify-content center
+    position relative
 
     canvas
       max-width calc(100% - 30px)
       max-height calc(100% - 30px)
+
+      // f*** u flexbox
+      padding 0
+      margin auto
+      display block
+      position absolute
+      top 0
+      bottom 0
+      left 0
+      right 0
 
     p
       line-height 15px
