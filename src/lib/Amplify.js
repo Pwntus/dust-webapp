@@ -1,16 +1,12 @@
-import Amplify, { Auth } from 'aws-amplify'
+import API from '@aws-amplify/api'
+import Auth from '@aws-amplify/auth'
+import { Logger } from '@aws-amplify/core'
 
-// Amplify.Logger.LOG_LEVEL = process.env.NODE_ENV === 'development'
-//   ? 'DEBUG'
-//   : 'ERROR'
+Logger.LOG_LEVEL = process.env.NODE_ENV === 'development'
+  ? 'INFO'
+  : 'ERROR'
 
-Amplify.configure({
-  Auth: {
-    identityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOL_ID,
-    region: process.env.VUE_APP_AWS_REGION,
-    userPoolId: process.env.VUE_APP_AWS_USER_POOL_ID,
-    userPoolWebClientId: process.env.VUE_APP_AWS_WEB_CLIENT_ID
-  },
+API.configure({
   API: {
     endpoints: [
       {
@@ -26,5 +22,13 @@ Amplify.configure({
         }
       }
     ]
+  }
+})
+Auth.configure({
+  Auth: {
+    identityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOL_ID,
+    region: process.env.VUE_APP_AWS_REGION,
+    userPoolId: process.env.VUE_APP_AWS_USER_POOL_ID,
+    userPoolWebClientId: process.env.VUE_APP_AWS_WEB_CLIENT_ID
   }
 })

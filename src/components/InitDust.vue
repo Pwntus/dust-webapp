@@ -4,7 +4,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { REFRESH_HIST } from '@/config'
+import { REFRESH_HIST, TOPIC } from '@/config'
 import { MQTT } from '@/lib/MQTT'
 
 export default {
@@ -16,7 +16,7 @@ export default {
   computed: mapGetters('App', ['sensors']),
   methods: {
     ...mapActions('Cognito', ['fetchSession', 'signInUser']),
-    ...mapActions('App', ['getNames', 'getHistogram'])
+    ...mapActions('App', ['getNames', 'getHistogram', 'message'])
   },
   async mounted () {
     // Sign in user if possible
@@ -29,7 +29,12 @@ export default {
           password: process.env.VUE_APP_MIC_PASSWORD
         })
       } finally {
-        MQTT.init(this)
+        MQTT.subscribe([TOPIC], ({ message }) => {
+          try {
+            const topic = Object.getOwnPropertySymbols(message).map(s => message[s])[0]
+            this.message({ topic, message })
+          } catch (e) {}
+        })
         await this.getNames()
         this.proc = async () => {
           for (let thing in this.sensors) {

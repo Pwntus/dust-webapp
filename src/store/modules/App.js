@@ -1,6 +1,6 @@
 /* eslint-disable */
 import SWorker from 'simple-web-worker'
-import { API } from 'aws-amplify'
+import API from '@aws-amplify/api'
 import * as t from '@/store/types'
 import { API_NAME, THING_TYPE } from '@/config'
 

@@ -115,7 +115,7 @@ export default {
               bus.late = this.get_late(bus)
               bus.sched_time = this.get_sched_time(bus)
 
-              return {...bus}
+              return { ...bus }
             })
           } catch (e) {}
         })

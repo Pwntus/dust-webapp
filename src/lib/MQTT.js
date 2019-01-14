@@ -1,70 +1,64 @@
-/* eslint-disable */
-import AWSMqtt from 'aws-mqtt-client'
-import { Auth } from 'aws-amplify'
-import { TOPIC } from '@/config'
+import Amplify from '@aws-amplify/core'
+import Auth from '@aws-amplify/auth'
+import PubSub from '@aws-amplify/pubsub'
+import { AWSIoTProvider } from '@aws-amplify/pubsub/lib/Providers'
 
 class MqttClient {
-  async init (ctx) {
-    this.ctx = ctx
-    this.topic = null
-    this.retries = 0
+  constructor () {
+    // List containing active MQTT instances
+    this.instances = []
+  }
 
+  /**
+   * Attaches the current user credentials to the AWSIoTProvider so
+   * the signed in user has the ability to recieve data from subscribed
+   * MQTT Topics.
+   *
+   * Resolves a promise if the credentials were received and the Provider
+   * was successfully attached to the amplify class.
+   */
+  async attachIotPolicy () {
     try {
       const credentials = await Auth.currentCredentials()
-
-      this.mqtt = new AWSMqtt({
-        region:                 process.env.VUE_APP_AWS_REGION,
-        accessKeyId:            credentials.accessKeyId,
-        secretAccessKey:        credentials.secretAccessKey,
-        sessionToken:           credentials.sessionToken,
-        endpointAddress:        process.env.VUE_APP_AWS_IOT_ENDPOINT,
-        maximumReconnectTimeMs: 8000,
-        protocol:               'wss'
-      })
-      
-      this.mqtt.on('reconnect', () => this.reconnect())
-      this.mqtt.on('connect',   () => this.connect())
-      this.mqtt.on('message',   (topic, message) => this.message(topic, message))
+      Amplify.addPluggable(new AWSIoTProvider({
+        aws_pubsub_region: process.env.VUE_APP_AWS_REGION,
+        aws_pubsub_endpoint: `wss://${process.env.VUE_APP_AWS_IOT_ENDPOINT}/mqtt`,
+        credentials
+      }))
     } catch (e) {
-      console.log('ERROR', e)
+      throw e
     }
   }
 
-  reconnect () {
-    this.retries++
-    if (this.retries >= 2) {
-      this.retries = 0
-      this.kill()
+  /**
+   * Subscribes to multiple MQTT Topics
+   *
+   * @param {array} topics an array of strings of the topics that are being subscribed to
+   * @param {fn} messageHandler the handler that should be called when a message is received
+   */
+  async subscribe (topics, messageHandler) {
+    try {
+      await this.attachIotPolicy()
+      PubSub.subscribe(topics).subscribe({
+        next: data => {
+          if (messageHandler)
+            messageHandler(data)
+        },
+        // eslint-disable-next-line
+        error: error => console.error(error),
+        // eslint-disable-next-line
+        close: () => console.log('Done')
+      })
+    } catch (e) {
+      throw e
     }
-  }
-
-  connect () {
-    this.subscribe(TOPIC)
-  }
-
-  subscribe (topic) {
-    if (this.topic !== null)
-      this.mqtt.unsubscribe(this.topic)
-
-    this.topic = topic
-    this.mqtt.subscribe(topic, {qos: 1}, (err, granted) => {
-      if (err)
-        console.log(err)
-    })
-  }
-
-  message (topic, message) {
-    this.ctx.$store.dispatch('App/message', {
-      topic: topic,
-      message: message.toString('utf-8')
-    })
   }
 
   kill () {
-    if (this.topic !== null)
-      this.mqtt.unsubscribe(this.topic)
-    this.mqtt.end(true)
-    this.init(this.ctx)
+    for (let i in this.instances) {
+      this.instances[i].unsubscribe()
+      delete this.instances[i]
+    }
   }
 }
 

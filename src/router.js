@@ -91,6 +91,25 @@ export default new Router({
         })
       }
     },
+    {
+      path: '/dust',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify({
+          cards: [
+            {
+              name: 'dust-card',
+              thingId: '00001337'
+            },
+            {
+              name: 'dust-card',
+              thingId: '00001341'
+            }
+          ],
+          rows: 1
+        })
+      }
+    },
 
     // Default
     {
