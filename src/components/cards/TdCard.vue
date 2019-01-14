@@ -171,7 +171,12 @@ export default {
       this.nextEvent = this.data[this.n]
 
       try {
-        let response = await fetch(this.eventCoverEndpoint)
+        let coverEndpointUrl = this.eventCoverEndpoint
+        if (!coverEndpointUrl) {
+          this.nextEventCover = undefined
+          return
+        }
+        let response = await fetch(coverEndpointUrl)
         let { cover } = await response.json()
         this.nextEventCover = cover.source
       } catch (e) {
@@ -191,7 +196,7 @@ export default {
       this.poll()
     }, FB_TIMEOUT)
     this.timeout_event = setInterval(() => {
-      this.n = this.n >= this.data.length ? 0 : this.n + 1
+      this.n = (this.n + 1) >= this.data.length ? 0 : this.n + 1
       this.setNextEvent()
     }, 45000)
     this.timeout_countdown = setInterval(() => {
