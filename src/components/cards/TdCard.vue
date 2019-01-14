@@ -171,7 +171,12 @@ export default {
       this.nextEvent = this.data[this.n]
 
       try {
-        let response = await fetch(this.eventCoverEndpoint)
+        let coverEndpointUrl = this.eventCoverEndpoint
+        if (!coverEndpointUrl) {
+          this.nextEventCover = undefined
+          return
+        }
+        let response = await fetch(coverEndpointUrl)
         let { cover } = await response.json()
         this.nextEventCover = cover.source
       } catch (e) {
