@@ -55,7 +55,7 @@ export default {
       return this.map.distance(bounds.getSouthWest(), bounds.getNorthEast())
     },
     layer () {
-      return L.tileLayer('https://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png')
+      return L.tileLayer('https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png')
     },
     flightRadarEndpoint () {
       const bounds = this.map.getBounds()
