@@ -20,7 +20,7 @@ import 'leaflet-rotatedmarker'
 import axios from 'axios'
 import '@/lib/Leaflet.MovingMarker'
 
-const PROXY = 'http://startiot.cs.uit.no:3004/'
+const PROXY = 'https://startiot.cs.uit.no:3004/'
 const ICON = L.icon({
   iconUrl: require('../../assets/img/airplane-mode-on-symbol.png'),
   iconSize:     [20, 20], // size of the icon
