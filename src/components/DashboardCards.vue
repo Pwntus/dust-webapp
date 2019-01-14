@@ -102,6 +102,13 @@ export default {
       const widgetDefinitions = JSON.parse(widgetDefinitionsString)
       this.config = widgetDefinitions.cards
       this.layout.rows = widgetDefinitions.rows
+
+      if (this.config.length === 1) {
+        let newTitle = this.config[0].title
+        if (newTitle) {
+          document.title = newTitle
+        }
+      }
     } catch (e) {
       alert('Failed to parse your modules definition, try again')
       this.config = []
