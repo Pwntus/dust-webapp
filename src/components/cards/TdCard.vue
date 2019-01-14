@@ -196,7 +196,7 @@ export default {
       this.poll()
     }, FB_TIMEOUT)
     this.timeout_event = setInterval(() => {
-      this.n = this.n >= this.data.length ? 0 : this.n + 1
+      this.n = (this.n + 1) >= this.data.length ? 0 : this.n + 1
       this.setNextEvent()
     }, 45000)
     this.timeout_countdown = setInterval(() => {
