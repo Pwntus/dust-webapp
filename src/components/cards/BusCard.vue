@@ -42,7 +42,7 @@ export default {
   }),
   computed: {
     endpoint () {
-      return `http://startiot.cs.uit.no:3003/${this.from}`
+      return `https://startiot.cs.uit.no:3003/${this.from}`
     },
     now () {
       return moment().add(this.diff)
