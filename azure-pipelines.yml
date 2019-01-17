@@ -10,9 +10,22 @@ steps:
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
-
-- script: |
-    npm install
-    npm run lint
-    npm run build
-  displayName: 'npm install, lint and build'
+- script: npm install
+  displayName: npm install
+- script: npx vue-cli-service lint --format junit 1> eslint.junit.xml
+  displayName: npx vue-cli-service lint
+- task: PublishTestResults@2
+  displayName: 'Publish Lint Results'
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: eslint.junit.xml
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    testRunTitle: vue-cli-service lint
+    buildPlatform: $(Agent.OS)-$(Agent.OSArchitecture)
+- script: npx vue-cli-service build --dest '$(Build.ArtifactStagingDirectory)'
+  displayName: npm run build
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'dist' 
+  continueOnError: true
