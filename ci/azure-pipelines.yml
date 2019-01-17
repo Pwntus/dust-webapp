@@ -25,12 +25,10 @@ jobs:
       contents: .env.local
       targetFolder: $(Build.SourcesDirectory)
       overWrite: true
-  - task: PowerShell@2
+  - powershell: '& ./ci/ci-lint.ps1'
     displayName: npx vue-cli-service lint
-    inputs:
-      targetType: filePath
-      filePath: ci/ci-lint.ps1
-      errorActionPreference: 'stop'
+    errorActionPreference: 'stop'
+    ignoreLASTEXITCODE: true
   - script: npx vue-cli-service build --dest '$(Build.ArtifactStagingDirectory)'
     displayName: npm run build
   - task: DeleteFiles@1

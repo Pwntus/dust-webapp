@@ -33,7 +33,6 @@ process {
     }
 
     $lintResult = $lintLines | ConvertFrom-Json
-    $lintLines | Out-File (Join-Path $PSScriptRoot lint.json)
     $hasErrors = $false
     foreach ($lintFile in $lintResult) {
         [string]$filePath = $lintFile.filePath
