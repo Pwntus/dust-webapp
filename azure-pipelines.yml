@@ -18,8 +18,16 @@ steps:
     $eslintFile = Join-Path . "eslint.junit.b$ENV:BUILD_BUILDID.xml"
     try { [xml]$xmlDoc = Get-Content $eslintFile }
     catch { 
-      Write-Host "##vso[task.debug]Removing non-XML file $eslintFile"
-      Remove-Item $eslintFile -Verbose -Force 
+      Write-Host "##vso[task.debug]Overwriting non-XML file $eslintFile" with empty JUnit file.
+      $wr = [System.Xml.XmlWriter]::Create($eslintFile)
+      try { 
+        $wr.WriteStartDocument()
+        $wr.WriteElementString("testsuites", $null)
+        $wr.WriteEndDocument()
+        $wr.Flush()
+      } finally {
+        $wr.Close()
+      }
     }
   displayName: Remove empty ESLint Result file (if any)
   continueOnError: true
