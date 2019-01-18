@@ -8,6 +8,10 @@ jobs:
 - job: nodeJsLintBuild
   displayName: node.js Vue App CI
   steps:
+  - powershell: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest -Uri "https://github.com/Microsoft/azure-pipelines-task-lib/raw/master/powershell/VstsTaskSdk/LoggingCommandFunctions.ps1" -OutFile .\ci\LoggingCommandFunctions.ps1
+    displayName: Download LoggingCommandFunctions.ps1
   - task: NodeTool@0
     inputs:
       versionSpec: '10.x'
