@@ -27,9 +27,10 @@ process {
     Write-Host (Write-TaskDebug_Internal -Message "Invoking '$npxCmd vue-cli-service lint'" -AsOutput)
     $lintOut = & $npxCmd vue-cli-service lint --no-fix --format json
     $lintLines = Join-Lines -InputObject $lintOut
+    $completeMessage = "'$npxCmd vue-cli-service lint' exited with code $LASTEXITCODE"
     if ($LASTEXITCODE -eq 0) {
         Write-Host $lintLines
-        Write-Host (Write-SetResult -Result Succeeded -Message $lintLines -AsOutput -DoNotThrow)
+        Write-Host (Write-SetResult -Result Succeeded -Message $completeMessage -AsOutput)
         return
     }
 
@@ -53,8 +54,8 @@ process {
     }
 
     if ($hasErrors) {
-        Write-Host (Write-SetResult -Result Failed -Message "'$npxCmd vue-cli-service lint' exited with code $LASTEXITCODE" -AsOutput -DoNotThrow)
+        Write-Host (Write-SetResult -Result Failed -Message $completeMessage -AsOutput)
     } else {
-        Write-Host (Write-SetResult -Result SucceededWithIssues -Message "'$npxCmd vue-cli-service lint' exited with code $LASTEXITCODE" -AsOutput -DoNotThrow)
+        Write-Host (Write-SetResult -Result SucceededWithIssues -Message $completeMessage -AsOutput)
     }
 }
