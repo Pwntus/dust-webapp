@@ -15,40 +15,49 @@
         target="_new"
       ) www.td.org.uit.no
   v-card-text
-    //- Left section
-    .td-layout-left(
-      v-if="showLeft"
-    )
-      v-img.mb-2(
-        :src="nextEventCover"
-        height="100"
-      )
-      .headline {{ name(nextEvent) }}
-      .caption.my-2
-        .fade
-        | {{ description(nextEvent) }}
-      .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }}. {{ placeName(nextEvent) }}
-
-    //- Right section
-    .td-layout-right(
-      :class="{ 'half' : showLeft }"
-    )
-      v-list(dense two-line)
-        v-list-tile(
-          v-for="(event, index) in data"
-          :key="index"
-          :href="link(event)"
-          target="_new"
+    template(v-if="data.length > 0")
+      //- Left section
+      .td-layout-left(v-if="showLeft")
+        v-img.mb-2(
+          :src="nextEventCover"
+          height="100"
         )
-          v-list-tile-avatar
-            b {{ month(event) }}
-            span {{ day(event) }}
-          v-list-tile-content
-            v-list-tile-title {{ name(event) }}
-            v-list-tile-sub-title {{ placeName(event) }}
-          v-list-tile-action
-            span {{ start_time_ugly(event) }}
-            span {{ start_time(event) }}
+        .headline {{ name(nextEvent) }}
+        .caption.my-2
+          .fade
+          | {{ description(nextEvent) }}
+        .body-2.mt-3 {{ day(nextEvent) }} {{ month(nextEvent) }} {{ placeName(nextEvent) }}
+
+      //- Right section
+      .td-layout-right(
+        :class="{ 'half' : showLeft }"
+      )
+        v-list(dense two-line)
+          v-list-tile(
+            v-for="(event, index) in data"
+            :key="index"
+            :href="link(event)"
+            target="_new"
+          )
+            v-list-tile-avatar
+              b {{ month(event) }}
+              span {{ day(event) }}
+            v-list-tile-content
+              v-list-tile-title {{ name(event) }}
+              v-list-tile-sub-title {{ placeName(event) }}
+            v-list-tile-action
+              span {{ start_time_ugly(event) }}
+              span {{ start_time(event) }}
+    v-layout(
+      v-else
+      align-center
+      justify-center
+      column
+      fill-height
+    )
+      .display-4.mb-4
+        v-icon.no-upcoming-events-icon beach_access
+      .display-1 No upcoming events
 </template>
 
 <script>
@@ -96,7 +105,7 @@ export default {
     },
     month (event) {
       try {
-        return moment(event.start_time).format('MMM')
+        return moment(event.start_time).format('MMM.')
       } catch (e) {
         return ''
       }
@@ -216,6 +225,9 @@ export default {
 
 <style lang="stylus">
 .card.td
+  .no-upcoming-events-icon
+    font-size unset
+
   .td-layout-left
     float left
     width 50%
