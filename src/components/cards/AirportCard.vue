@@ -103,6 +103,11 @@ export default {
           const start = [lat, lng]
           const end = L.GeometryUtil.destination(new L.LatLng(lat, lng), track, this.maxDistance)
 
+          let tootTipText = `${origin} → ${destination}`
+          if (flightNumber) {
+            tootTipText = `${flightNumber}<br/>${tootTipText}`
+          }
+
           // Smoothly correct position
           layer.moveTo(start, 1000)
           layer.on('end', () => {
@@ -113,7 +118,7 @@ export default {
               rotationOrigin: 'center',
               icon: ICON
             })
-            .bindTooltip(`${origin} → ${destination}`, {
+            .bindTooltip(tootTipText, {
               permanent: true,
               direction: 'bottom',
               className: 'tooltip'
@@ -144,13 +149,18 @@ export default {
         const start = [lat, lng]
         const end = L.GeometryUtil.destination(new L.LatLng(lat, lng), track, this.maxDistance)
 
+        let tootTipText = `${origin} → ${destination}`
+        if (flightNumber) {
+          tootTipText = `${flightNumber}<br/>${tootTipText}`
+        }
+
         const movingMarker = L.Marker.movingMarker([start, end], kts2ms(kts, this.maxDistance), {
           autostart: true,
           rotationAngle: track,
           rotationOrigin: 'center',
           icon: ICON
         })
-        .bindTooltip(`${origin} → ${destination}`, {
+        .bindTooltip(tootTipText, {
           permanent: true,
           direction: 'bottom',
           className: 'tooltip'
@@ -241,4 +251,5 @@ export default {
         font-size 9px
         background rgba(0, 0, 0, .5)
         color #FFF
+        text-align center
 </style>
