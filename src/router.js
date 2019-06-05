@@ -118,14 +118,14 @@ export default new Router({
       props: {
         queryProp: JSON.stringify({
           cards: [
-            {
-              name: 'dust-card',
-              thingId: '00001337'
-            },
-            {
-              name: 'dust-card',
-              thingId: '00001341'
-            },
+            // {
+            //   name: 'dust-card',
+            //   thingId: '00001337'
+            // },
+            // {
+            //   name: 'dust-card',
+            //   thingId: '00001341'
+            // },
             {
               name: 'airport-card',
               title: 'Tromsø Airport, Langnes',
