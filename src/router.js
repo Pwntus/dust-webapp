@@ -8,7 +8,7 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: '/dust',
+  base: '/info',
   routes: [
     {
       path: '/debug',
@@ -127,15 +127,15 @@ export default new Router({
             //   thingId: '00001341'
             // },
             {
+              name: 'bus-card',
+              title: 'UiT (Southbound)',
+              from: '19021323:2'
+            },
+            {
               name: 'airport-card',
               title: 'Tromsø Airport, Langnes',
               center: '69.67,18.95',
               zoom: 7
-            },
-            {
-              name: 'bus-card',
-              title: 'UiT (Southbound)',
-              from: '19021323:2'
             },
             {
               name: 'bus-card',
