@@ -2,7 +2,10 @@
 .card.td
   v-card-title
     .headline
-      | Tromsøstudentenes Dataforening
+      a(
+        href="https://www.facebook.com/tromsodataforening/events/"
+        target="_new"
+      ) Tromsøstudentenes Dataforening
       .type
         | Upcoming Events
         v-icon event_note
