@@ -110,6 +110,23 @@ export default new Router({
         })
       }
     },
+    {
+      path: '/tos-airport',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify({
+          cards: [
+            {
+              name: 'airport-card',
+              title: 'Tromsø Airport, Langnes',
+              center: '69.67,18.95',
+              zoom: 7
+            }
+          ],
+          rows: 1
+        })
+      }
+    },
 
     // Default
     {
