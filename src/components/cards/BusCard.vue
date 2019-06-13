@@ -12,7 +12,7 @@
     .subheader Live
   v-card-text
     v-list(dense two-line)
-      v-list-tile(
+      v-list-tile.unset-height(
         v-for="(bus, index) in filtered"
         :key="index"
         :class="{ gone : has_gone(bus) }"
@@ -25,6 +25,11 @@
           v-list-tile-title
             | {{ bus.nd }}
             b {{ bus.late }}
+          v-list-tile-sub-title(v-if="bus.notes.length")
+            .caption(
+              v-for="(n, noteIndex) in bus.notes"
+              :key="noteIndex"
+            ) {{ n }}
         v-list-tile-action
           span {{ bus.live_moment }}
           span(v-if="bus.sched_time !== ''") {{ bus.sched_time }}
@@ -104,6 +109,10 @@ export default {
             let raw = parse(res)
             this.filtered = raw.root.children[0].children.map(item => {
               let bus = item.attributes
+              let hasNotes = item.children.length > 0
+              bus.notes = hasNotes
+                ? item.children[0].children.map(child => child.attributes.d)
+                : []
 
               // Convert properties to moments
               if (bus.hasOwnProperty('a'))
@@ -157,4 +166,8 @@ export default {
 .card.bus
   .gone
     opacity .5
+
+  .unset-height
+    .v-list__tile
+      height unset !important
 </style>
