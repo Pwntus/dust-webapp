@@ -109,7 +109,7 @@ export default {
           }
 
           // Smoothly correct position
-          layer.moveTo(start, 1000)
+          layer.moveTo(start, 8000)
           layer.on('end', () => {
             this.featureGroup.removeLayer(layer)
             layer = L.Marker.movingMarker([start, end], kts2ms(kts, this.maxDistance), {
@@ -218,7 +218,7 @@ export default {
     // Start FlightRadar24 polling
     this.poller = setInterval(() => {
       this.poll()
-    }, 10000)
+    }, 8000)
   },
   beforeDestroy () {
     clearInterval(this.poller)

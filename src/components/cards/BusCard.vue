@@ -12,11 +12,11 @@
     .subheader Live
   v-card-text
     v-list(dense two-line)
-      v-list-tile(
+      v-list-tile.unset-height(
         v-for="(bus, index) in filtered"
         :key="index"
         :class="{ gone : has_gone(bus) }"
-        :href="`http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/turinfo?context=wap.xhtml&dep1=1&now=1&trip=${encodeURIComponent(bus.tid)}&from=${encodeURIComponent(from)}`"
+        :href="`http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/turinfo?context=wap.xhtml&dep1=1&now=1&trip=${encodeURIComponent(bus.tid)}&from=${encodeURIComponent(bus.v)}`"
         target="_new"
       )
         v-list-tile-avatar
@@ -25,6 +25,11 @@
           v-list-tile-title
             | {{ bus.nd }}
             b {{ bus.late }}
+          v-list-tile-sub-title(v-if="bus.notes.length")
+            .caption(
+              v-for="(n, noteIndex) in bus.notes"
+              :key="noteIndex"
+            ) {{ n }}
         v-list-tile-action
           span {{ bus.live_moment }}
           span(v-if="bus.sched_time !== ''") {{ bus.sched_time }}
@@ -55,19 +60,28 @@ export default {
   },
   methods: {
     get_sched_time (bus) {
-      if (bus.hasOwnProperty('a2'))
+      if (bus.cancellation === 'true') {
+        if (bus.hasOwnProperty('a'))
+          return bus.a.format('HH:mm')
+        else if (bus.hasOwnProperty('d'))
+          return bus.d.format('HH:mm')
+        return ''
+      }
+      if (bus.hasOwnProperty('a2') && this.now.diff(bus.a2) < 0)
         return 'est. ' + bus.a2.format('HH:mm')
       else if (bus.hasOwnProperty('d2'))
         return 'est. ' + bus.d2.format('HH:mm')
       return ''
     },
     get_live_moment (bus) {
-      if (bus.hasOwnProperty('a2'))
+      if (bus.cancellation === 'true')
+        return 'Cancelled'
+      if (bus.hasOwnProperty('a2') && this.now.diff(bus.a2) < 0)
         return bus.a2.from(this.now)
-      else if (bus.hasOwnProperty('a'))
-        return bus.a.format('[sched.] HH:mm')
       else if (bus.hasOwnProperty('d2'))
         return bus.d2.from(this.now)
+      else if (bus.hasOwnProperty('a'))
+        return bus.a.format('[sched.] HH:mm')
       else if (bus.hasOwnProperty('d'))
         return bus.d.format('[sched.] HH:mm')
       else
@@ -84,9 +98,9 @@ export default {
       return diff > 1 ? `${Math.round(diff)}'` : null
     },
     has_gone (bus) {
-      if (bus.hasOwnProperty('a2') && bus.hasOwnProperty('a'))
-        return this.now.diff(bus.a2) > 0
-      else if (bus.hasOwnProperty('d2') && bus.hasOwnProperty('d'))
+      if (bus.hasOwnProperty('a2') && bus.hasOwnProperty('a') && this.now.diff(bus.a2) < 0)
+        return false
+      if (bus.hasOwnProperty('d2') && bus.hasOwnProperty('d'))
         return this.now.diff(bus.d2) > 0
       else
         return false
@@ -104,6 +118,10 @@ export default {
             let raw = parse(res)
             this.filtered = raw.root.children[0].children.map(item => {
               let bus = item.attributes
+              let hasNotes = item.children.length > 0
+              bus.notes = hasNotes
+                ? item.children[0].children.map(child => child.attributes.d)
+                : []
 
               // Convert properties to moments
               if (bus.hasOwnProperty('a'))
@@ -157,4 +175,8 @@ export default {
 .card.bus
   .gone
     opacity .5
+
+  .unset-height
+    .v-list__tile
+      height unset !important
 </style>

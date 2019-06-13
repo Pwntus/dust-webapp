@@ -24,6 +24,34 @@ export default new Router({
       }
     },
     {
+      path: '/tos-sentrum',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'bus-card',
+            title: 'Sentrum (alle holdeplasser)',
+            from: 'Tromsø sentrum [hpl.gruppe]'
+          }],
+          rows: 1
+        })
+      }
+    },
+    {
+      path: '/naturfagbygget',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify({
+          cards: [{
+            name: 'bus-card',
+            title: 'Gjennomgangsbygget',
+            from: 'Gjennomgangsbygget (Tromsø)'
+          }],
+          rows: 1
+        })
+      }
+    },
+    {
       path: '/bruveien9',
       component: Dashboard,
       props: {
@@ -104,6 +132,23 @@ export default new Router({
             {
               name: 'dust-card',
               thingId: '00001341'
+            }
+          ],
+          rows: 1
+        })
+      }
+    },
+    {
+      path: '/tos-airport',
+      component: Dashboard,
+      props: {
+        queryProp: JSON.stringify({
+          cards: [
+            {
+              name: 'airport-card',
+              title: 'Tromsø Airport, Langnes',
+              center: '69.67,18.95',
+              zoom: 7
             }
           ],
           rows: 1
