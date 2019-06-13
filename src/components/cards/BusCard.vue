@@ -16,7 +16,7 @@
         v-for="(bus, index) in filtered"
         :key="index"
         :class="{ gone : has_gone(bus) }"
-        :href="`http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/turinfo?context=wap.xhtml&dep1=1&now=1&trip=${encodeURIComponent(bus.tid)}&from=${encodeURIComponent(from)}`"
+        :href="`http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/turinfo?context=wap.xhtml&dep1=1&now=1&trip=${encodeURIComponent(bus.tid)}&from=${encodeURIComponent(bus.v)}`"
         target="_new"
       )
         v-list-tile-avatar
