@@ -60,19 +60,28 @@ export default {
   },
   methods: {
     get_sched_time (bus) {
-      if (bus.hasOwnProperty('a2'))
+      if (bus.cancellation === 'true') {
+        if (bus.hasOwnProperty('a'))
+          return bus.a.format('HH:mm')
+        else if (bus.hasOwnProperty('d'))
+          return bus.d.format('HH:mm')
+        return ''
+      }
+      if (bus.hasOwnProperty('a2') && this.now.diff(bus.a2) < 0)
         return 'est. ' + bus.a2.format('HH:mm')
       else if (bus.hasOwnProperty('d2'))
         return 'est. ' + bus.d2.format('HH:mm')
       return ''
     },
     get_live_moment (bus) {
-      if (bus.hasOwnProperty('a2'))
+      if (bus.cancellation === 'true')
+        return 'Cancelled'
+      if (bus.hasOwnProperty('a2') && this.now.diff(bus.a2) < 0)
         return bus.a2.from(this.now)
-      else if (bus.hasOwnProperty('a'))
-        return bus.a.format('[sched.] HH:mm')
       else if (bus.hasOwnProperty('d2'))
         return bus.d2.from(this.now)
+      else if (bus.hasOwnProperty('a'))
+        return bus.a.format('[sched.] HH:mm')
       else if (bus.hasOwnProperty('d'))
         return bus.d.format('[sched.] HH:mm')
       else
@@ -89,9 +98,9 @@ export default {
       return diff > 1 ? `${Math.round(diff)}'` : null
     },
     has_gone (bus) {
-      if (bus.hasOwnProperty('a2') && bus.hasOwnProperty('a'))
-        return this.now.diff(bus.a2) > 0
-      else if (bus.hasOwnProperty('d2') && bus.hasOwnProperty('d'))
+      if (bus.hasOwnProperty('a2') && bus.hasOwnProperty('a') && this.now.diff(bus.a2) < 0)
+        return false
+      if (bus.hasOwnProperty('d2') && bus.hasOwnProperty('d'))
         return this.now.diff(bus.d2) > 0
       else
         return false
