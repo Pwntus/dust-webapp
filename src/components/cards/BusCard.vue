@@ -3,7 +3,7 @@
   v-card-title
     .headline
       a(
-        :href="`http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/avgangsinfo?context=wap.xhtml&dep1=1&now=1&from=${encodeURIComponent(from)}`"
+        :href="`https://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/avgangsinfo?context=wap.xhtml&dep1=1&now=1&from=${encodeURIComponent(from)}`"
         target="_new"
       ) {{ title }}
       .type
@@ -16,7 +16,7 @@
         v-for="(bus, index) in filtered"
         :key="index"
         :class="{ gone : has_gone(bus) }"
-        :href="`http://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/turinfo?context=wap.xhtml&dep1=1&now=1&trip=${encodeURIComponent(bus.tid)}&from=${encodeURIComponent(bus.v)}`"
+        :href="`https://rp.tromskortet.no/scripts/TravelMagic/TravelMagicWE.dll/turinfo?context=wap.xhtml&dep1=1&now=1&trip=${encodeURIComponent(bus.tid)}&from=${encodeURIComponent(bus.v)}`"
         target="_new"
       )
         v-list-tile-avatar
