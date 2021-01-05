@@ -14,7 +14,7 @@
     "@aws-amplify/pubsub": "^1.0.22",
     "@vuetify/vuex-cognito-module": "^0.2.0",
     "aws-sdk": "^2.253.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chart.js": "^2.7.2",
     "chartjs-plugin-annotation": "^0.5.7",
     "leaflet": "^1.3.3",
